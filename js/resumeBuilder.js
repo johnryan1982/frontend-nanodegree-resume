@@ -102,3 +102,25 @@ Resume.work = {
     console.log('Resume.work()');
   }
 };
+
+/// projects at a glance
+Resume.projects = {
+  projects: [
+    {
+      title: "PlantNation",
+      dates: "September 2015 - September 2016",
+      description: "Website design, development and maintenance services for a plant-based delicatessen",
+      images: ["images/197x148.gif", "images/197x148.gif"]
+    },
+    {
+      title: "RPS London Limited",
+      dates: "April 2016 - in progress",
+      description: "Website design, development and maintenance services",
+      images: ["images/197x148.gif", "images/197x148.gif"]
+    }
+  ],
+
+  display: function () {
+    console.log('Resume.projects()');
+  }
+};
