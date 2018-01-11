@@ -23,3 +23,35 @@ Resume.bio = {
   display: function () {
     console.log('Resume.bio()');
 };
+
+/// education at a glance
+Resume.education = {
+  schools: [
+    {
+      name: "The University of Liverpool",
+      location: "Liverpool, UK",
+      degree: "BSc Hons Computer Science (2:i)",
+      majors: ["Computer Science"],
+      dates: "September 2000 - May 2003",
+      url: "//www.liverpool.ac.uk/study/undergraduate/courses/computer-science-bsc-hons/overview/"    }
+  ],
+
+  onlineCourses: [
+    {
+      title: "JavaScript Crash Course",
+      school: "Udacity",
+      dates: "July 2017 - August 2017",
+      url: "//www.udacity.com/course/ud804"
+    },
+    {
+      title: "Front-End Web Developer Nanodegree",
+      school: "Udacity",
+      dates: "December 2016 - January 2018",
+      url: "//www.udacity.com/course/nd001"
+    }
+  ],
+
+  display: function () {
+    console.log('Resume.education()');
+  }
+};
