@@ -1,22 +1,46 @@
 /*
-  Note: cannot wrap the entire script inside IIFE (without making significant
-  changes to helper.js) as helper.js requires access to the global Resume
-  object
+  Considerations / Observations:
+
+  * cannot wrap the entire script inside IIFE (without making significant
+    changes to helper.js) as helper.js requires access to the global Resume
+    object;
+
+  * prefer `arr.forEach()` as opposed to `for()` loops as more compact,
+    provides closures and therefore lends itself easily to functional
+    programming;
+
+  * prefer `$(obj).append(_Resume.HTMLString_)` as opposed to
+    `$(obj).append($(_Resume.HTMLString_))` as it performs at least 5% quicker
+    when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
+
+  * prefer to use `documentFragment`s and only appending to the DOM when
+    required to prevent unnecessary DOM reflows/repaints
 */
 
-/* utils */
-function _replaceData(content, template) {
-  return _supplant('%data%', content, template);
-}
-
-function _supplant(oldStr, newStr, template) {
-  return template.replace(oldStr, newStr);
-}
-
-/// namespace
+/* Minimise globals footprint by creating a Resume object */
 Resume = window.Resume || {};
 
-/// biography at a glance
+/**
+* @description Replace oldStr with newStr for a given template
+* @param {string} oldStr
+* @param {string} newStr
+* @param {string} template
+* @returns {string} New string
+*/
+const _supplant = (oldStr, newStr, template) =>
+  template.replace(oldStr, newStr);
+
+/**
+* @description Convenience method for replacing the string `%data%` with some
+content for a given template. Makes use of the `supplant` function
+* @param {string} content
+* @param {string} template
+* @returns {string} New string
+*/
+const _replaceData = (content, template) =>
+  _supplant('%data%', content, template);
+
+/* Biography at a glance */
 Resume.bio = {
   name: "John Ryan",
   role: "Front-End Developer",
@@ -41,6 +65,9 @@ Resume.bio = {
 
   biopic: "//gravatar.com/avatar/186b65f0404c63825b28710da670b293?s=220",
 
+  /**
+  * @description Generate HTML content and inject into DOM
+  */
   display: function () {
     var bio = this,
       docFrag = $(document.createDocumentFragment()),
@@ -49,40 +76,41 @@ Resume.bio = {
       skills,
       markup = Resume.markup;
 
-    /* first round of content injection into DOM */
-    // name & role both appear *before* the existing contacts placeholder
+    /*
+      First round of content injection into DOM.
+      Name & role both appear *before* the existing contacts placeholder
+    */
     docFrag.append(_replaceData(bio.name, markup.HTMLheaderName));
     docFrag.append(_replaceData(bio.role, markup.HTMLheaderRole));
     docFrag.insertBefore(topContacts);
 
-    /* second round of content injection into DOM
-       note that we re-use the (now empty) documentFragment so as to
-       prevent a new object invocation */
-    // contact channels
-/*
-    // Object.keys(bio.contacts).forEach(function (channel) {
-    //   var template = window['Resume.HTML' + channel] || 'Resume.HTMLcontactGeneric';
-    //   docFrag.append(_replaceData(bio.contacts[channel], template));
-    // });
-    // topContacts.append(docFrag);
-*/
+    /*
+      Second round of content injection into DOM.
+      Contact channels.
+      Note that we re-use the (now empty) documentFragment so as to
+      prevent a new object invocation
+    */
     topContacts.append(Resume.printContactInfo());
 
-    /* third round of content injection into DOM */
-    // bio picture and welcome message
+    /*
+      Third round of content injection into DOM.
+      Bio picture and welcome message
+    */
     docFrag.append(_replaceData(bio.biopic, markup.HTMLbioPic));
     docFrag.append(_replaceData(bio.welcomeMessage, markup.HTMLwelcomeMsg));
     container.append(docFrag);
 
-    /* fourth round of content injection into DOM */
-    // skills
+    /*
+      Fourth round of content injection into DOM.
+      Skills
+    */
     skills = bio.skills;
     if (skills.length > 0) {
-      // inject header and containing `<div>`
+      /* Inject header and containing `<div>` */
       container.append(markup.HTMLskillsStart);
 
-      // generate new content, then add to injected `<div>`
-      skills.forEach(function (skill) {
+      /* Generate new content, then add to injected `<div>` */
+      skills.forEach((skill) => {
         docFrag.append(_replaceData(skill, markup.HTMLskills));
       });
       $('#skills', container).append(docFrag);
@@ -90,7 +118,7 @@ Resume.bio = {
   }
 };
 
-/// education at a glance
+/* Education at a glance */
 Resume.education = {
   schools: [
     {
@@ -123,7 +151,7 @@ Resume.education = {
   }
 };
 
-/// employment at a glance
+/* Employment at a glance */
 Resume.work = {
   jobs: [
     {
@@ -250,7 +278,7 @@ Resume.work = {
   }
 };
 
-/// projects at a glance
+/* Projects at a glance */
 Resume.projects = {
   projects: [
     {
@@ -280,23 +308,23 @@ Resume.footer =  {
 };
 
 Resume.printContactInfo = (function _generateContactInfo(channels) {
-  // generate a single instance of the "common" Resume.HTML and cache
+  /* Generate a single instance of the "common" HTML and cache */
   var docFrag = $(document.createDocumentFragment()),
     markup = Resume.markup;
 
-  Object.keys(channels).forEach(function (channel) {
+  Object.keys(channels).forEach((channel) => {
     if (typeof channels[channel] === 'object') return;
     var template = markup['HTML' + channel] || markup.HTMLcontactGeneric;
     docFrag.append(_replaceData(channels[channel], template));
   });
 
-  // thanks to the closure, each Resume.printContactInfo() invocation will now
-  // receive a unique cloned instance of the original DOMFragment; not using
-  // a closure would result in a single DOMFragment, which would be moved to a
-  // new parent DOMElement with *each* function invocation
-  return function () {
-    return docFrag.clone();
-  };
+  /*
+    Thanks to the closure, each Resume.printContactInfo() invocation will now
+    receive a unique cloned instance of the original DOMFragment; not using
+    a closure would result in a single DOMFragment, which would be moved to a
+    new parent DOMElement with *each* function invocation
+  */
+  return () => docFrag.clone();
 })(Resume.bio.contacts);
 
 Resume.bio.display();
