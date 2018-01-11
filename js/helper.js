@@ -33,30 +33,30 @@ Resume.markup = {
   HTMLskills: '<li class="flex-item"><span class="white-text">%data%</span></li>',
 
   HTMLworkStart: '<div class="work-entry"></div>',
-  HTMLworkEmployer: '<a href="#">%data%',
+  HTMLworkEmployer: '<a href="#" target="_blank">%data%',
   HTMLworkTitle: ' - %data%</a>',
   HTMLworkDates: '<div class="date-text">%data%</div>',
   HTMLworkLocation: '<div class="location-text">%data%</div>',
   HTMLworkDescription: '<p><br>%data%</p>',
 
   HTMLprojectStart: '<div class="project-entry"></div>',
-  HTMLprojectTitle: '<a href="#">%data%</a>',
+  HTMLprojectTitle: '<a href="#" target="_blank">%data%</a>',
   HTMLprojectDates: '<div class="date-text">%data%</div>',
   HTMLprojectDescription: '<p><br>%data%</p>',
   HTMLprojectImage: '<img src="%data%">',
 
   HTMLschoolStart: '<div class="education-entry"></div>',
-  HTMLschoolName: '<a href="#">%data%',
+  HTMLschoolName: '<a href="#" target="_blank">%data%',
   HTMLschoolDegree: ' -- %data%</a>',
   HTMLschoolDates: '<div class="date-text">%data%</div>',
   HTMLschoolLocation: '<div class="location-text">%data%</div>',
   HTMLschoolMajor: '<em><br>Major: %data%</em>',
 
   HTMLonlineClasses: '<h3>Online Classes</h3>',
-  HTMLonlineTitle: '<a href="#">%data%',
+  HTMLonlineTitle: '<a href="#" target="_blank">%data%',
   HTMLonlineSchool: ' - %data%</a>',
   HTMLonlineDates: '<div class="date-text">%data%</div>',
-  HTMLonlineURL: '<br><a href="#">%data%</a>',
+  HTMLonlineURL: '<br><a href="#" target="_blank">%data%</a>',
 
   HTMLinternationalizeButton: '<button>Internationalize</button>',
   HTMLgoogleMap: '<div id="map"></div>'
