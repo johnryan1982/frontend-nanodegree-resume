@@ -9,9 +9,9 @@
     provides closures and therefore lends itself easily to functional
     programming;
 
-  * prefer `$(obj).append(_Resume.HTMLString_)` as opposed to
-    `$(obj).append($(_Resume.HTMLString_))` as it performs at least 5% quicker
-    when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
+  * prefer `$(obj).append(_Resume.markup.HTMLString_)` as opposed to
+    `$(obj).append($(_Resume.markup.HTMLString_))` as it performs at least 5%
+    quicker when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
 
   * prefer to use `documentFragment`s and only appending to the DOM when
     required to prevent unnecessary DOM reflows/repaints
@@ -31,14 +31,33 @@ const _supplant = (oldStr, newStr, template) =>
   template.replace(oldStr, newStr);
 
 /**
-* @description Convenience method for replacing the string `%data%` with some
-content for a given template. Makes use of the `supplant` function
+* @description Convenience method for replacing the placeholder `%data%`
+with some content for a given template. Makes use of the `supplant` function
 * @param {string} content
 * @param {string} template
 * @returns {string} New string
 */
 const _replaceData = (content, template) =>
   _supplant('%data%', content, template);
+
+/**
+* @description Convenience method for replacing a uri placeholder `#` with some
+content for a given template. Makes use of the `supplant` function
+* @param {string} content
+* @param {string} template
+* @returns {string} New string
+*/
+const _replaceHash = (content, template) =>
+  _supplant('#', content, template);
+
+/**
+* @description Check the page protocol in use for a given url
+* @param {string} url
+* @returns {string} 'http' or 'https'
+*/
+const _getPageProtocol = (url) => ['http:', 'https:'][+(/^https:\/\//.test(url))];
+
+const protocol = _getPageProtocol(window.location.href);
 
 /* Biography at a glance */
 Resume.bio = {
@@ -70,6 +89,7 @@ Resume.bio = {
   */
   display: function () {
     var bio = this,
+      /* Placeholder to prevent unnecessary DOM reflows/repaints */
       docFrag = $(document.createDocumentFragment()),
       container = $('#header'),
       topContacts = container.find('#topContacts'),
@@ -146,8 +166,46 @@ Resume.education = {
     }
   ],
 
+  /**
+  * @description Generate HTML content and inject into DOM
+  */
   display: function () {
-    console.log('Resume.education()');
+    var education = this,
+      /* Placeholder to prevent unnecessary DOM reflows/repaints */
+      docFrag = $(document.createDocumentFragment()),
+      container = $('#education'),
+      courses;
+
+    /* Schools */
+    education.schools.forEach((school) => {
+      var schoolContainer = $(Resume.markup.HTMLschoolStart),
+        title = _replaceData(school.name, Resume.markup.HTMLschoolName) + _replaceData(school.degree, Resume.markup.HTMLschoolDegree);
+
+      schoolContainer.append(_replaceHash(school.url, title));
+      schoolContainer.append(_replaceData(school.dates, Resume.markup.HTMLschoolDates));
+      schoolContainer.append(_replaceData(school.location, Resume.markup.HTMLschoolLocation));
+      schoolContainer.append(_replaceData(school.majors, Resume.markup.HTMLschoolMajor));
+      docFrag.append(schoolContainer);
+    });
+
+    /* Online courses */
+    courses = education.onlineCourses;
+    if (courses.length > 0) {
+      docFrag.append($(Resume.markup.HTMLonlineClasses));
+
+      courses.forEach(function (course) {
+        var coursesContainer = $(Resume.markup.HTMLschoolStart),
+          title = _replaceData(course.title, Resume.markup.HTMLonlineTitle) + _replaceData(course.school, Resume.markup.HTMLonlineSchool);
+
+        coursesContainer.append(_replaceHash(course.url, title));
+        coursesContainer.append(_replaceData(course.dates, Resume.markup.HTMLonlineDates));
+        coursesContainer.append(_replaceHash(course.url, _replaceData(protocol + course.url, Resume.markup.HTMLonlineURL)));
+        docFrag.append(coursesContainer);
+      });
+
+      /* First and only content injection into DOM */
+      container.append(docFrag);
+    }
   }
 };
 
@@ -328,4 +386,5 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
 })(Resume.bio.contacts);
 
 Resume.bio.display();
+Resume.education.display();
 Resume.footer.display();
