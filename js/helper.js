@@ -40,7 +40,7 @@ Resume.markup = {
   HTMLworkDescription: '<p><br>%data%</p>',
 
   HTMLprojectStart: '<div class="project-entry"></div>',
-  HTMLprojectTitle: '<a href="#" target="_blank">%data%</a>',
+  HTMLprojectTitle: '<a>%data%</a>',
   HTMLprojectDates: '<div class="date-text">%data%</div>',
   HTMLprojectDescription: '<p><br>%data%</p>',
   HTMLprojectImage: '<img src="%data%">',
