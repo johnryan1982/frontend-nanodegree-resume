@@ -79,6 +79,25 @@ h5 {
 
 }
 
+.work-entry .tags {
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  font-style: italic;
+  letter-spacing: 0.1px;
+}
+.work-entry .tag {
+  background: #ccc;
+  border-radius: 0.25em;
+  font-size: 0.75em;
+  margin-top: 0.25em;
+  margin-right: 0.25em;
+  padding: 0.25em 0.3em;
+}
+.work-entry .tag:last-of-type {
+  margin-right: 0;
+}
+
 p {
   font-size: 14px;
   color: #333;

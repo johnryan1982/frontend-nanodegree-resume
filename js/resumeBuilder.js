@@ -220,7 +220,13 @@ Resume.work = {
       dates: "February 2016 - in progress",
       description: "I provide ongoing technical guidance and assistance to a"
         + " London-based eatery, with a primary focus on frontend solutions"
-        + " and email services."
+        + " and email services.",
+      meta: {
+        ref: "wulf",
+        url: "//www.wulfandlamb.com",
+        address: "243 Pavilion Road, London SW1X 0BP, UK",
+        tags: ["JavaScript", "Git", "Node.js", "HTML", "CSS", "Agile", "Project Management", "System administrator", "Frontend consultancy"]
+      }
     },
     {
       employer: "Ancoa Software",
@@ -243,7 +249,13 @@ Resume.work = {
         + " in personnel on the board and a change of direction from the senior"
         + " management team, frontend resources were reduced and progress"
         + " slowed. Shortly after this point, I chose to pursue other interests"
-        + " including a return to working in native frontend technologies."
+        + " including a return to working in native frontend technologies.",
+      meta: {
+        ref: "ancoa",
+        url: "//www.ancoa.com",
+        address: "95 Miles Road, London CR4 3FH, UK",
+        tags: ["JavaScript", "Dart", "AngularDart", "Git", "Node.js", "D3.js", "HTML", "CSS", "Agile", "Project Management", "jQuery"]
+      }
     },
     {
       employer: "North Plains Ltd (formerly VYRE)",
@@ -259,7 +271,13 @@ Resume.work = {
         + " Responsibilities included defining product requirements and"
         + " specifications alongside key stakeholders; producing detailed"
         + " estimates and resource schedules; managing project budgets; and"
-        + " managing relationships with principle stakeholders."
+        + " managing relationships with principle stakeholders.",
+      meta: {
+        ref: "northplains",
+        url: "//www.northplains.com",
+        address: "32 Paul Street, London EC2A 4LB, UK",
+        tags: ["JavaScript", "HTML", "CSS", "XML", "XSL", "Agile", "Project Management", "jQuery", "SVN"]
+      }
     },
     {
       employer: "Sprout At Work",
@@ -301,7 +319,13 @@ Resume.work = {
         + " loads of over eight thousand concurrent users during peak times."
         + "<br><br>In February 2013, we were proudly selected to participate in"
         + " the inaugural Nike+ Accelerator programme as one of 10"
-        + " hand-selected companies."
+        + " hand-selected companies.",
+      meta: {
+        ref: "sprout",
+        url: "//www.sproutatwork.com",
+        address: "1 Alexander St, Vancouver, BC V6A 1B2 Canada",
+        tags: ["JavaScript", "HTML", "CSS", "AWS", "Git", "Unix", "Agile", "Project Management", "jQuery"]
+      }
     },
     {
       employer: "VYRE",
@@ -328,7 +352,13 @@ Resume.work = {
         + " content as required into either Resume.HTML or CSS, and on"
         + " occasion, to generate further custom JavaScript to be injected into"
         + " the webpage. I would often need to create custom Java classes to"
-        + " extend the otherwise limited XSL transformers."
+        + " extend the otherwise limited XSL transformers.",
+      meta: {
+        ref: "vyre",
+        url: "//twitter.com/vyreonbrand/status/276691034182926338",
+        address: "5-25, Scrutton Street, London EC2A 4HJ, UK",
+        tags: ["JavaScript", "jQuery", "HTML", "CSS", "XML", "XSL", "Java", "Unix", "Agile", "SVN"]
+      }
     }
   ],
 
@@ -345,13 +375,20 @@ Resume.work = {
     /* Jobs */
     work.jobs.forEach((job) => {
       var jobContainer = $(markup.HTMLworkStart),
-        employer = _replaceData(job.employer, markup.HTMLworkEmployer),
+        meta = job.meta,
+        employer = _replaceHash(meta.url, _replaceData(job.employer, markup.HTMLworkEmployer)),
         title = _replaceData(job.title, markup.HTMLworkTitle),
         tags = [];
 
       jobContainer.append($(employer + title));
       jobContainer.append($(_replaceData(job.dates, markup.HTMLworkDates)));
       jobContainer.append($(_replaceData(job.location, markup.HTMLworkLocation)));
+
+      meta.tags.forEach((tag) => {
+        tags.push(_replaceData(tag, markup.HTMLworkTag));
+      });
+      jobContainer.append($(_replaceData(tags.join(''), markup.HTMLworkTags)));
+
       jobContainer.append($(_replaceData(job.description, markup.HTMLworkDescription)));
 
       docFrag.append(jobContainer);

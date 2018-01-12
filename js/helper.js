@@ -37,6 +37,8 @@ Resume.markup = {
   HTMLworkTitle: ' - %data%</a>',
   HTMLworkDates: '<div class="date-text">%data%</div>',
   HTMLworkLocation: '<div class="location-text">%data%</div>',
+  HTMLworkTags: '<ul class="tags">%data%</ul>',
+  HTMLworkTag: '<li class="tag">%data%</li>',
   HTMLworkDescription: '<p><br>%data%</p>',
 
   HTMLprojectStart: '<div class="project-entry"></div>',
