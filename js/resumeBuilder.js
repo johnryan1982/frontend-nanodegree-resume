@@ -174,32 +174,33 @@ Resume.education = {
       /* Placeholder to prevent unnecessary DOM reflows/repaints */
       docFrag = $(document.createDocumentFragment()),
       container = $('#education'),
-      courses;
+      courses,
+      markup = Resume.markup;
 
     /* Schools */
     education.schools.forEach((school) => {
-      var schoolContainer = $(Resume.markup.HTMLschoolStart),
-        title = _replaceData(school.name, Resume.markup.HTMLschoolName) + _replaceData(school.degree, Resume.markup.HTMLschoolDegree);
+      var schoolContainer = $(markup.HTMLschoolStart),
+        title = _replaceData(school.name, markup.HTMLschoolName) + _replaceData(school.degree, markup.HTMLschoolDegree);
 
       schoolContainer.append(_replaceHash(school.url, title));
-      schoolContainer.append(_replaceData(school.dates, Resume.markup.HTMLschoolDates));
-      schoolContainer.append(_replaceData(school.location, Resume.markup.HTMLschoolLocation));
-      schoolContainer.append(_replaceData(school.majors, Resume.markup.HTMLschoolMajor));
+      schoolContainer.append(_replaceData(school.dates, markup.HTMLschoolDates));
+      schoolContainer.append(_replaceData(school.location, markup.HTMLschoolLocation));
+      schoolContainer.append(_replaceData(school.majors, markup.HTMLschoolMajor));
       docFrag.append(schoolContainer);
     });
 
     /* Online courses */
     courses = education.onlineCourses;
     if (courses.length > 0) {
-      docFrag.append($(Resume.markup.HTMLonlineClasses));
+      docFrag.append($(markup.HTMLonlineClasses));
 
       courses.forEach(function (course) {
-        var coursesContainer = $(Resume.markup.HTMLschoolStart),
-          title = _replaceData(course.title, Resume.markup.HTMLonlineTitle) + _replaceData(course.school, Resume.markup.HTMLonlineSchool);
+        var coursesContainer = $(markup.HTMLschoolStart),
+          title = _replaceData(course.title, markup.HTMLonlineTitle) + _replaceData(course.school, markup.HTMLonlineSchool);
 
         coursesContainer.append(_replaceHash(course.url, title));
-        coursesContainer.append(_replaceData(course.dates, Resume.markup.HTMLonlineDates));
-        coursesContainer.append(_replaceHash(course.url, _replaceData(protocol + course.url, Resume.markup.HTMLonlineURL)));
+        coursesContainer.append(_replaceData(course.dates, markup.HTMLonlineDates));
+        coursesContainer.append(_replaceHash(course.url, _replaceData(protocol + course.url, markup.HTMLonlineURL)));
         docFrag.append(coursesContainer);
       });
 
@@ -340,8 +341,8 @@ Resume.work = {
 Resume.projects = {
   projects: [
     {
-      title: "PlantNation",
-      dates: "September 2015 - September 2016",
+      title: "WeArePlantNation.com",
+      dates: "September 2015 - July 2016",
       description: "Website design, development and maintenance services for a"
         + " plant-based delicatessen",
       images: ["images/197x148.gif", "images/197x148.gif"]
@@ -349,13 +350,38 @@ Resume.projects = {
     {
       title: "RPS London Limited",
       dates: "April 2016 - in progress",
-      description: "Website design, development and maintenance services",
+      description: "Technical assistance for a consultancy firm",
       images: ["images/197x148.gif", "images/197x148.gif"]
     }
   ],
 
+  /**
+  * @description Generate HTML content and inject into DOM
+  */
   display: function () {
-    console.log('Resume.projects()');
+    var projects = this,
+      /* Placeholder to prevent unnecessary DOM reflows/repaints */
+      docFrag = $(document.createDocumentFragment()),
+      container = $('#projects'),
+      markup = Resume.markup;
+
+    /* Projects */
+    projects.projects.forEach((project) => {
+      var projectContainer = $(markup.HTMLprojectStart);
+
+      projectContainer.append($(_replaceData(project.title, markup.HTMLprojectTitle)));
+      projectContainer.append($(_replaceData(project.dates, markup.HTMLprojectDates)));
+      projectContainer.append($(_replaceData(project.description, markup.HTMLprojectDescription)));
+
+      project.images.forEach((image) => {
+        projectContainer.append($(_replaceData(image, markup.HTMLprojectImage)));
+      });
+
+      docFrag.append(projectContainer);
+    });
+
+    /* First and only content injection into DOM */
+    container.append(docFrag);
   }
 };
 
@@ -387,4 +413,5 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
 
 Resume.bio.display();
 Resume.education.display();
+Resume.projects.display();
 Resume.footer.display();
