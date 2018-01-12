@@ -218,9 +218,9 @@ Resume.work = {
       title: "Technical Consultant",
       location: "London, UK",
       dates: "February 2016 - in progress",
-      description: "I have been providing ongoing technical guidance and"
-        + " assistance to a London-based eatery, with a primary focus on"
-        + " frontend solutions and email services."
+      description: "I provide ongoing technical guidance and assistance to a"
+        + " London-based eatery, with a primary focus on frontend solutions"
+        + " and email services."
     },
     {
       employer: "Ancoa Software",
@@ -329,11 +329,36 @@ Resume.work = {
         + " occasion, to generate further custom JavaScript to be injected into"
         + " the webpage. I would often need to create custom Java classes to"
         + " extend the otherwise limited XSL transformers."
-      }
+    }
   ],
 
+  /**
+  * @description Generate HTML content and inject into DOM
+  */
   display: function () {
-    console.log('Resume.work()');
+    var work = this,
+      /* Placeholder to prevent unnecessary DOM reflows/repaints */
+      docFrag = $(document.createDocumentFragment()),
+      container = $('#workExperience'),
+      markup = Resume.markup;
+
+    /* Jobs */
+    work.jobs.forEach((job) => {
+      var jobContainer = $(markup.HTMLworkStart),
+        employer = _replaceData(job.employer, markup.HTMLworkEmployer),
+        title = _replaceData(job.title, markup.HTMLworkTitle),
+        tags = [];
+
+      jobContainer.append($(employer + title));
+      jobContainer.append($(_replaceData(job.dates, markup.HTMLworkDates)));
+      jobContainer.append($(_replaceData(job.location, markup.HTMLworkLocation)));
+      jobContainer.append($(_replaceData(job.description, markup.HTMLworkDescription)));
+
+      docFrag.append(jobContainer);
+    });
+
+    /* First and only content injection into DOM */
+    container.append(docFrag);
   }
 };
 
@@ -413,5 +438,6 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
 
 Resume.bio.display();
 Resume.education.display();
+Resume.work.display();
 Resume.projects.display();
 Resume.footer.display();
