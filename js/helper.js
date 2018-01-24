@@ -244,6 +244,8 @@ function initializeMap() {
 /*
 Uncomment the code below when you're ready to implement a Google Map!
 */
+$('#mapDiv').append(Resume.markup.HTMLgoogleMap);
+
 
 // Calls the initializeMap() function when the page loads
 //window.addEventListener('load', initializeMap);
