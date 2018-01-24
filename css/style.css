@@ -182,10 +182,11 @@ ul {
 }
 
 .biopic {
+  display: none;
+  filter: grayscale(100%);
   float: left;
   padding: 10px;
   width: 200px;
-  display: none;
 }
 
 img {
