@@ -465,10 +465,12 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
   });
 
   /*
-    Thanks to the closure, each Resume.printContactInfo() invocation will now
+    Thanks to this closure, each Resume.printContactInfo() invocation will now
     receive a unique cloned instance of the original DOMFragment; not using
     a closure would result in a single DOMFragment, which would be moved to a
-    new parent DOMElement with *each* function invocation
+    new parent DOMElement with *each* function invocation (ie. the header
+    contact information would simply be _moved_ to the footer and not
+    duplicated as is desired)
   */
   return () => docFrag.clone();
 })(Resume.bio.contacts);
