@@ -89,7 +89,6 @@ $(document).click((loc) => {
 });
 
 
-
 /*
   This is the fun part. Here's where we generate the custom Google Map for the
   website. See the documentation below for more details.
@@ -97,12 +96,11 @@ $(document).click((loc) => {
 */
 var map;    // declares a global map variable
 
-
 /*
   Start here! initializeMap() is called when page is loaded
 */
 function initializeMap() {
-  var locations;
+  var locations, markerRefs = [];
 
   var mapOptions = {
     disableDefaultUI: true
@@ -114,6 +112,16 @@ function initializeMap() {
   */
   map = new google.maps.Map(document.querySelector('#map'), mapOptions);
 
+  /*
+    Reuse the global infoWindow object to ensure only a single instance of
+    infoWindow exists, and therefore only one can ever be displayed
+  */
+  infoWindow2 = new google.maps.InfoWindow({
+    content: null,
+    maxWidth: 200
+  });
+  console.log(infoWindow2);
+
   /**
   * @description Returns an array of every location string from the JSONs
   written for bio, education, and work
@@ -123,7 +131,8 @@ function initializeMap() {
     var locations = [];
 
     /* Adds the single location property from bio to the locations array */
-    locations.push(Resume.bio.contacts.location);
+    // intentionally commented out as don't wish to disclose on a publicly accessible map
+    // locations.push(Resume.bio.contacts.location);
 
     /*
       Iterates through school locations and appends each location to
@@ -131,7 +140,11 @@ function initializeMap() {
       as described in the Udacity FEND Style Guide:
       https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
     */
-    Resume.education.schools.forEach((school) => locations.push(school.location));
+    // intentionally commented out as don't see the relevance of plotting on a work experience map
+    // Resume.education.schools.forEach(school => {
+    //   locations.push(school.location);
+    //   markerRefs.push(school.meta);
+    // });
 
     /*
       Iterates through work locations and appends each location to the
@@ -139,7 +152,11 @@ function initializeMap() {
       described in the Udacity FEND Style Guide:
       https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
     */
-    Resume.work.jobs.forEach((job) => locations.push(job.location));
+    // Resume.work.jobs.forEach((job) => locations.push(job.location));
+    Resume.work.jobs.forEach(job => {
+      locations.push(job.meta.address);
+      markerRefs.push(job.meta);
+    });
 
     return locations;
   }
@@ -150,7 +167,9 @@ function initializeMap() {
   */
   function createMapMarker(placeData) {
     /* Cache location data */
-    const loc = placeData.geometry.location;
+    var loc = placeData.geometry.location;
+
+    console.log(placeData);
 
     /*
       The next lines save location data from the search result object to local
@@ -158,7 +177,7 @@ function initializeMap() {
     */
     var lat = loc.lat(); // latitude from the place service
     var lon = loc.lng(); // longitude from the place service
-    var name = placeData.formatted_address;   // name of the place from the place service
+    var address = placeData.formatted_address; // name of the place from the place service
     var bounds = window.mapBounds; // current boundaries of the map window
 
     /*
@@ -168,22 +187,38 @@ function initializeMap() {
     var marker = new google.maps.Marker({
       map: map,
       position: loc,
-      title: name
+      title: address
     });
 
-    /*
-      infoWindows are the little helper windows that open when you click or
-      hover over a pin on a map. They usually contain more information about
-      a location
-    */
-    var infoWindow = new google.maps.InfoWindow({
-      content: name
-    });
+    /* Point of Interest */
+    var poi = markerRefs.filter(poi => poi.address === address)[0];
 
-    /* Hmmmm, I wonder what this is about... */
-    google.maps.event.addListener(marker, 'click', function() {
-      // your code goes here!
-    });
+    if (poi !== undefined) {
+      var content = document.querySelector(`#${poi.ref}`).cloneNode(true);
+      content.querySelectorAll('p').forEach(p => content.removeChild(p));
+      content.removeAttribute('id');
+
+      /*
+        infoWindows are the little helper windows that open when you click or
+        hover over a pin on a map. They usually contain more information about
+        a location
+      */
+      // var infoWindow = new google.maps.InfoWindow({
+      //   content: name
+      // });
+      // infoWindow2.setContent(name);
+
+      /* Hmmmm, I wonder what this is about... */
+      google.maps.event.addListener(marker, 'click', function (args) {
+        // your code goes here!
+        console.log('map clicked', args, infoWindow2);
+
+        infoWindow2.setContent(content);
+
+        // infoWindow.open(map, marker);
+        infoWindow2.open(map, marker);
+      });
+    }
 
     /*
       This is where the pin actually gets added to the map. bounds.extend()

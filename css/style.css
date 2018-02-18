@@ -116,6 +116,9 @@ a {
   margin-top: 10px;
   display: block;
 }
+#map a {
+  margin-top: initial;
+}
 
 .welcome-message {
   font-style: italic;
@@ -201,8 +204,35 @@ span {
   text-align: center;
 }
 
-/* Media queries to handle various device widths */
+/* Google Maps */
+#map {
+  display: block;
+  height: 100%;
+  margin: 0 5%;
+}
 
+#mapDiv {
+  height: 320px;
+  width: 100%;
+  padding-bottom: 5%;
+}
+
+#map a {
+  margin-top: initial;
+}
+
+/* Google Maps InfoWindow */
+.gm-style-iw .date-text {
+  font-style: inherit;
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+.gm-style-iw .location-text {
+  display: none;
+}
+
+/* Media queries to handle various device widths */
 @media only screen and (max-width: 1024px) {
   #lets-connect {
     margin-top: 5%;
@@ -225,23 +255,6 @@ span {
   .welcome-message {
     display: none;
   }
-}
-
-/* Google Maps */
-#map {
-  display: block;
-  height: 100%;
-  margin: 0 5%;
-}
-
-#mapDiv {
-  height: 320px;
-  width: 100%;
-  padding-bottom: 5%;
-}
-
-#map a {
-  margin-top: initial;
 }
 
 /* responsive */

@@ -14,7 +14,10 @@
     quicker when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
 
   * prefer to use `documentFragment`s and only appending to the DOM when
-    required to prevent unnecessary DOM reflows/repaints
+    required to prevent unnecessary DOM reflows/repaints;
+
+  * use Google's Reverse Geocoding example page to easily generate lat/lng
+    combinations when necessary (https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding)
 */
 
 /* Minimise globals footprint by creating a Resume object */
@@ -147,7 +150,12 @@ Resume.education = {
       degree: "BSc Hons Computer Science (2:i)",
       majors: ["Computer Science"],
       dates: "September 2000 - May 2003",
-      url: "//www.liverpool.ac.uk/study/undergraduate/courses/computer-science-bsc-hons/overview/"
+      url: "//www.liverpool.ac.uk/study/undergraduate/courses/computer-science-bsc-hons/overview/",
+      meta: {
+        ref: "uol",
+        url: "//www.liverpool.ac.uk",
+        address: "University of Liverpool, Bedford St N, Liverpool L69 7ZN, UK"
+      }
     }
   ],
 
@@ -182,6 +190,8 @@ Resume.education = {
       var schoolContainer = $(markup.HTMLschoolStart),
         title = _replaceData(school.name, markup.HTMLschoolName) + _replaceData(school.degree, markup.HTMLschoolDegree);
 
+      schoolContainer.attr('id', school.meta.ref);
+      schoolContainer.addClass('education');
       schoolContainer.append(_replaceHash(school.url, title));
       schoolContainer.append(_replaceData(school.dates, markup.HTMLschoolDates));
       schoolContainer.append(_replaceData(school.location, markup.HTMLschoolLocation));
@@ -224,7 +234,7 @@ Resume.work = {
       meta: {
         ref: "wulf",
         url: "//www.wulfandlamb.com",
-        address: "243 Pavilion Road, London SW1X 0BP, UK",
+        address: "243 Pavilion Rd, Chelsea, London SW1X 0BP, UK",
         tags: ["JavaScript", "Git", "Node.js", "HTML", "CSS", "Agile", "Project Management", "System administrator", "Frontend consultancy"]
       }
     },
@@ -246,14 +256,15 @@ Resume.work = {
         + " JavaScript. I spent 6 months laying the foundations for the new"
         + " project; mentoring existing developers; and recruiting additional"
         + " junior developers to form a frontend team. However, due to a change"
-        + " in personnel on the board and a change of direction from the senior"
-        + " management team, frontend resources were reduced and progress"
-        + " slowed. Shortly after this point, I chose to pursue other interests"
-        + " including a return to working in native frontend technologies.",
+        + " in personnel on the board and the subsequent change of direction"
+        + " from the senior management team, frontend resources were reduced"
+        + " and progress slowed. Shortly after this point, I chose to pursue"
+        + " other interests including a return to working in native frontend"
+        + " technologies.",
       meta: {
         ref: "ancoa",
         url: "//www.ancoa.com",
-        address: "95 Miles Road, London CR4 3FH, UK",
+        address: "95 Miles Rd, Mitcham CR4 3FH, UK",
         tags: ["JavaScript", "Dart", "AngularDart", "Git", "Node.js", "D3.js", "HTML", "CSS", "Agile", "Project Management", "jQuery"]
       }
     },
@@ -263,7 +274,7 @@ Resume.work = {
       location: "London, UK",
       dates: "August 2013 - August 2014",
       description: "On returning from Canada, I resumed my employment with VYRE"
-        + " who had recently been acquired by North Plain Ltd. As a Technical"
+        + " who had recently been acquired by North Plains Ltd. As a Technical"
         + " Consultant I lead a team of developers, designers and testers to"
         + " produce solutions built on the company's bespoke Content Management"
         + " System. I was responsible for managing development for a number of"
@@ -275,7 +286,7 @@ Resume.work = {
       meta: {
         ref: "northplains",
         url: "//www.northplains.com",
-        address: "32 Paul Street, London EC2A 4LB, UK",
+        address: "41 Corsham St, Hoxton, London N1 6DR, UK",
         tags: ["JavaScript", "HTML", "CSS", "XML", "XSL", "Agile", "Project Management", "jQuery", "SVN"]
       }
     },
@@ -323,7 +334,7 @@ Resume.work = {
       meta: {
         ref: "sprout",
         url: "//www.sproutatwork.com",
-        address: "1 Alexander St, Vancouver, BC V6A 1B2 Canada",
+        address: "1 Alexander St, Vancouver, BC V6A 1B2, Canada",
         tags: ["JavaScript", "HTML", "CSS", "AWS", "Git", "Unix", "Agile", "Project Management", "jQuery"]
       }
     },
@@ -345,19 +356,18 @@ Resume.work = {
         + " cricket season) both of which had custom external feeds driving"
         + " their content.<br><br>All of our client solutions were developed"
         + " using either native JavaScript or the jQuery library (as determined"
-        + " by the client’s internal DevOps/Developers) to complement the"
-        + " standard HTML and CSS. Site content would be polled where"
-        + " appropriate using AJAX and the content returned as XML. The"
-        + " Extensible Stylesheet Language (XSL) was used to transform this"
-        + " content as required into either Resume.HTML or CSS, and on"
-        + " occasion, to generate further custom JavaScript to be injected into"
-        + " the webpage. I would often need to create custom Java classes to"
-        + " extend the otherwise limited XSL transformers.",
+        + " by the client’s internal DevOps/Developers). Site content would be"
+        + " polled where appropriate using AJAX. The Extensible Stylesheet"
+        + " Language (XSL) was used to transform the XML response as required"
+        + " into either HTML or CSS, and on occasion, to generate further"
+        + " custom JavaScript to be injected into the webpage. I would often"
+        + " need to create custom Java classes to extend the standard XSL"
+        + " transformers.",
       meta: {
         ref: "vyre",
         url: "//twitter.com/vyreonbrand/status/276691034182926338",
-        address: "5-25, Scrutton Street, London EC2A 4HJ, UK",
-        tags: ["JavaScript", "jQuery", "HTML", "CSS", "XML", "XSL", "Java", "Unix", "Agile", "SVN"]
+        address: "5-25 Scrutton St, London EC2A 4HJ, UK",
+        tags: ["JavaScript", "jQuery", "HTML", "CSS", "XML", "XSL", "Java", "SQL", "Unix", "Agile", "SVN"]
       }
     }
   ],
@@ -380,6 +390,8 @@ Resume.work = {
         title = _replaceData(job.title, markup.HTMLworkTitle),
         tags = [];
 
+      jobContainer.attr('id', job.meta.ref);
+      jobContainer.addClass('employment');
       jobContainer.append($(employer + title));
       jobContainer.append($(_replaceData(job.dates, markup.HTMLworkDates)));
       jobContainer.append($(_replaceData(job.location, markup.HTMLworkLocation)));
@@ -412,7 +424,7 @@ Resume.projects = {
     {
       title: "RPS London Limited",
       dates: "April 2016 - in progress",
-      description: "Technical assistance for a consultancy firm",
+      description: "Technical assistance for a property management firm",
       images: ["images/197x148.gif", "images/197x148.gif"]
     }
   ],
