@@ -235,7 +235,7 @@ Resume.work = {
         ref: "wulf",
         url: "//www.wulfandlamb.com",
         address: "243 Pavilion Rd, Chelsea, London SW1X 0BP, UK",
-        tags: ["JavaScript", "Git", "Node.js", "HTML", "CSS", "Agile", "Project Management", "System administrator", "Frontend consultancy"]
+        tags: ["JavaScript", "Git", "Node.js", "HTML", "CSS", "Agile", "System administrator", "Frontend consultancy"]
       }
     },
     {
