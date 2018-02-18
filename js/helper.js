@@ -94,7 +94,8 @@ $(document).click((loc) => {
   website. See the documentation below for more details.
   https://developers.google.com/maps/documentation/javascript/reference
 */
-var map;    // declares a global map variable
+var map,      // declares a global map variable
+  infoWindow; // declares a global inforWindow variable
 
 /*
   Start here! initializeMap() is called when page is loaded
@@ -113,14 +114,16 @@ function initializeMap() {
   map = new google.maps.Map(document.querySelector('#map'), mapOptions);
 
   /*
-    Reuse the global infoWindow object to ensure only a single instance of
-    infoWindow exists, and therefore only one can ever be displayed
+    infoWindows are the little helper windows that open when you click or hover
+    over a pin on a map. They usually contain more information about a
+    location. Reuse the global infoWindow object to ensure only a single
+    instance of infoWindow exists, and therefore only one can ever be displayed
   */
-  infoWindow2 = new google.maps.InfoWindow({
+  infoWindow = new google.maps.InfoWindow({
     content: null,
     maxWidth: 200
   });
-  console.log(infoWindow2);
+  console.log(infoWindow);
 
   /**
   * @description Returns an array of every location string from the JSONs
@@ -153,7 +156,10 @@ function initializeMap() {
       https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
     */
     // Resume.work.jobs.forEach((job) => locations.push(job.location));
-    Resume.work.jobs.forEach(job => {
+    Resume.work.jobs
+    .filter(job => !/Vancouver, CA/.test(job.location))
+    .forEach(job => {
+      console.log(job.location);
       locations.push(job.meta.address);
       markerRefs.push(job.meta);
     });
@@ -194,29 +200,30 @@ function initializeMap() {
     var poi = markerRefs.filter(poi => poi.address === address)[0];
 
     if (poi !== undefined) {
+      /* Configure InfoWindow content from corresponding employment section */
       var content = document.querySelector(`#${poi.ref}`).cloneNode(true);
       content.querySelectorAll('p').forEach(p => content.removeChild(p));
       content.removeAttribute('id');
+
+      /* Reconfigure marker using custom title and graphic */
+      marker.setTitle(content.querySelector('a').innerText);
+      marker.setIcon(`images/googlemaps/${poi.ref}-inkscape-sm.png`);
 
       /*
         infoWindows are the little helper windows that open when you click or
         hover over a pin on a map. They usually contain more information about
         a location
       */
-      // var infoWindow = new google.maps.InfoWindow({
-      //   content: name
-      // });
-      // infoWindow2.setContent(name);
 
       /* Hmmmm, I wonder what this is about... */
       google.maps.event.addListener(marker, 'click', function (args) {
         // your code goes here!
-        console.log('map clicked', args, infoWindow2);
+        // console.log('map clicked', args, infoWindow);
 
-        infoWindow2.setContent(content);
+        infoWindow.setContent(content);
 
         // infoWindow.open(map, marker);
-        infoWindow2.open(map, marker);
+        infoWindow.open(map, marker);
       });
     }
 
