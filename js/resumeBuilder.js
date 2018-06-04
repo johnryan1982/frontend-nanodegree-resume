@@ -419,7 +419,7 @@ Resume.projects = {
       dates: "September 2015 - July 2016",
       description: "Website design, development and maintenance services for a"
         + " plant-based delicatessen",
-      images: ["images/197x148.gif", "images/197x148.gif"]
+      images: ["images/weareplantnation@1x.jpg"]
     },
     {
       title: "RPS London Limited",
