@@ -425,7 +425,7 @@ Resume.projects = {
       title: "RPS London Limited",
       dates: "April 2016 - in progress",
       description: "Technical assistance for a property management firm",
-      images: ["images/197x148.gif", "images/197x148.gif"]
+      images: ["images/rps@1x.jpg"]
     }
   ],
 
