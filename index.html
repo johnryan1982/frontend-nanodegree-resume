@@ -1,60 +1,90 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Resume</title>
-    <link href="css/style.css" rel="stylesheet">
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCsobgu4sb818xC71_DsYIl3JFe0y4o3XE&libraries=places"></script>
+    <link href="css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBJtwGfwd81HdSt9FbgPveJM2WZTs6cdtU"></script>
   </head>
   <body>
-    <div id="main">
-      <div id="header" class="center-content clear-fix">
-        <ul id="topContacts" class="flex-box"></ul>
-      </div>
-      <div style="clear: both;"></div>
-      <div id="workExperience" class="gray">
-        <h2>Work Experience</h2>
-      </div>
-      <div id="projects">
-        <h2>Projects</h2>
-      </div>
-      <div id="education" class="gray">
-        <h2>Education</h2>
-      </div>
-      <div id="mapDiv">
-        <h2>Where I've Lived and Worked</h2>
-      </div>
-      <div id="lets-connect" class="dark-gray">
-        <h2 class="orange center-text">Let's Connect</h2>
-          <ul id="footerContacts" class="flex-box">
-        </ul>
-      </div>
+    <div class="wrapper">
+
+      <header class="header" id="header">
+        <div class="headline"></div>
+        <div class="responsive-container">
+          <button id="menuBtn" class="menubtn fa fa-bars" title="Contact details menu"></button>
+        </div>
+      </header>
+
+      <nav id="menu" class="menu"></nav>
+
+      <main class="main" id="main">
+        <section class="content" id="blurb"></section>
+
+        <section class="content" id="skills">
+          <header class="sub-header">Skills at a glance</header>
+        </section>
+
+        <section class="content" id="experience">
+          <header class="sub-header">Work experience</header>
+        </section>
+
+        <section class="content" id="projects">
+          <header class="sub-header">Projects</header>
+        </section>
+
+        <section class="content" id="education">
+          <header class="sub-header">Education</header>
+        </section>
+
+        <section class="content" id="locations">
+          <header class="sub-header">Where I've lived & worked</header>
+          <div id="mapDiv"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <h3 class="sub-header">Let's connect</h3>
+        <nav class="menu"></nav>
+      </footer>
+
     </div>
+
+    <script src="js/polyfill.js"></script>
     <script src="js/jQuery.js"></script>
     <script src="js/helper.js"></script>
     <script src="js/resumeBuilder.js"></script>
     <script>
-      if(document.getElementsByClassName('flex-item').length === 0) {
-        document.getElementById('topContacts').style.display = 'none';
+      /// blurb
+      if (document.getElementById('blurb').getElementsByClassName('quote').length === 0) {
+        document.getElementById('blurb').style.display = 'none';
       }
-      if(document.getElementsByTagName('h1').length === 0) {
-        document.getElementById('header').style.display = 'none';
+
+      /// skills
+      if (document.getElementById('skills').getElementsByClassName('skill').length === 0) {
+        document.getElementById('skills').style.display = 'none';
       }
-      if(document.getElementsByClassName('work-entry').length === 0) {
-        document.getElementById('workExperience').style.display = 'none';
+
+      /// experience
+      if (document.getElementById('experience').getElementsByTagName('article').length === 0) {
+        document.getElementById('experience').style.display = 'none';
       }
-      if(document.getElementsByClassName('project-entry').length === 0) {
+
+      /// projects
+      if (document.getElementById('projects').getElementsByTagName('article').length === 0) {
         document.getElementById('projects').style.display = 'none';
       }
-      if(document.getElementsByClassName('education-entry').length === 0) {
+
+      /// education
+      if (document.getElementById('education').getElementsByTagName('article').length === 0) {
         document.getElementById('education').style.display = 'none';
       }
-      if(document.getElementsByClassName('flex-item').length === 0) {
-        document.getElementById('lets-connect').style.display = 'none';
-      }
-      if(document.getElementById('map') === null) {
-        document.getElementById('mapDiv').style.display = 'none';
+
+      /// map
+      if (document.getElementById('map') === null) {
+        document.getElementById('locations').style.display = 'none';
       }
     </script>
   </body>

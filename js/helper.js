@@ -6,53 +6,48 @@ Resume = window.Resume || {};
   functions replace the %data% placeholder text you see in them
 */
 Resume.markup = {
-  HTMLheaderName: '<h1 id="name">%data%</h1>',
-  HTMLheaderRole: '<span>%data%</span><hr>',
+  // header, menu, blurb & skills
+  HTMLbioPic: '<div class="responsive-img-container biopic"><img src="%data%" class="responsive-img"></div>',
+  HTMLheaderName: '<h1 class="h1">%data%</h1>',
+  HTMLheaderRole: '<h2 class="h2">%data%</h2>',
+  HTMLcontactGeneric: '<li class="contact"><a href="%action%" target="_blank"><span class="fa-stack fa"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse %icon%"></i></span>%data%</a></li>',
+  HTMLwelcomeMsg: '<blockquote class="quote"><p>%data%</p></blockquote>',
+  HTMLskillsStart: '<ul class="skills"></ul>',
+  HTMLskills: '<li><div class="skill">%key%</div><div>%val%</div></li>',
 
-  HTMLcontactGeneric: '<li class="flex-item"><span class="orange-text">%contact%</span><span class="white-text">%data%</span></li>',
-  HTMLmobile: '<li class="flex-item"><span class="orange-text">mobile</span><span class="white-text">%data%</span></li>',
-  HTMLemail: '<li class="flex-item"><span class="orange-text">email</span><span class="white-text">%data%</span></li>',
-  HTMLtwitter: '<li class="flex-item"><span class="orange-text">twitter</span><span class="white-text">%data%</span></li>',
-  HTMLgithub: '<li class="flex-item"><span class="orange-text">github</span><span class="white-text">%data%</span></li>',
-  HTMLblog: '<li class="flex-item"><span class="orange-text">blog</span><span class="white-text">%data%</span></li>',
-  HTMLlocation: '<li class="flex-item"><span class="orange-text">location</span><span class="white-text">%data%</span></li>',
-
-  HTMLbioPic: '<img src="%data%" class="biopic">',
-  HTMLwelcomeMsg: '<span class="welcome-message">%data%</span>',
-
-  HTMLskillsStart: '<h3 id="skills-h3">Skills at a Glance:</h3><ul id="skills" class="flex-column"></ul>',
-  HTMLskills: '<li class="flex-item"><span class="white-text">%data%</span></li>',
-
-  HTMLworkStart: '<div class="work-entry"></div>',
-  HTMLworkEmployer: '<a href="#" target="_blank">%data%',
-  HTMLworkTitle: ' - %data%</a>',
-  HTMLworkDates: '<div class="date-text">%data%</div>',
-  HTMLworkLocation: '<div class="location-text">%data%</div>',
-  HTMLworkTags: '<ul class="tags">%data%</ul>',
+  // work experience
+  HTMLworkStart: '<article></article>',
+  HTMLworkEmployer: '<h1><a href="#" target="_blank">%data%',
+  HTMLworkTitle: ' - %data%</a></h1>',
+  HTMLworkDates: '<h2 class="meta date">%data%</h2>',
+  HTMLworkLocation: '<h2 class="meta location">%data%</h2>',
+  HTMLworkTags: '<ul class="meta tags">%data%</ul>',
   HTMLworkTag: '<li class="tag">%data%</li>',
-  HTMLworkDescription: '<p><br>%data%</p>',
+  HTMLworkDescription: '<p>%data%</p>',
 
-  HTMLprojectStart: '<div class="project-entry"></div>',
-  HTMLprojectTitle: '<a>%data%</a>',
-  HTMLprojectDates: '<div class="date-text">%data%</div>',
-  HTMLprojectDescription: '<p><br>%data%</p>',
-  HTMLprojectImage: '<img src="%data%">',
+  // projects
+  HTMLprojectStart: '<article></article>',
+  HTMLprojectTitle: '<h1>%data%</h1>',
+  HTMLprojectDates: '<h2 class="meta date">%data%</h2>',
+  HTMLprojectDescription: '<p>%data%</p>',
+  HTMLprojectGallery: '<div class="gallery"></div>',
+  HTMLprojectImage: '<div class="responsive-img-container"><img src="%data%" class="responsive-img"></div>',
 
-  HTMLschoolStart: '<div class="education-entry"></div>',
-  HTMLschoolName: '<a href="#" target="_blank">%data%',
-  HTMLschoolDegree: ' -- %data%</a>',
-  HTMLschoolDates: '<div class="date-text">%data%</div>',
-  HTMLschoolLocation: '<div class="location-text">%data%</div>',
-  HTMLschoolMajor: '<em><br>Major: %data%</em>',
-
-  HTMLonlineClasses: '<h3>Online Classes</h3>',
-  HTMLonlineTitle: '<a href="#" target="_blank">%data%',
-  HTMLonlineSchool: ' - %data%</a>',
-  HTMLonlineDates: '<div class="date-text">%data%</div>',
-  HTMLonlineURL: '<br><a href="#" target="_blank">%data%</a>',
+  // education
+  HTMLschoolStart: '<article></article>',
+  HTMLschoolName: '<h1><a href="#" target="_blank">%data%',
+  HTMLschoolDegree: ' -- %data%</a></h1>',
+  HTMLschoolDates: '<h2 class="meta date">%data%</h2>',
+  HTMLschoolLocation: '<h2 class="meta location">%data%</h2>',
+  HTMLschoolMajor: '<div class="meta">Major: %data%</div>',
+  HTMLonlineClasses: '<header class="sub-header--small">Online Classes</header>',
+  HTMLonlineTitle: '<h1><a href="#" target="_blank">%data%',
+  HTMLonlineSchool: ' - %data%</a></h1>',
+  HTMLonlineDates: '<h2 class="meta date">%data%</h2>',
+  HTMLonlineURL: '<div class="meta"><a href="#" target="_blank">%data%</a></div>',
 
   HTMLinternationalizeButton: '<button>Internationalize</button>',
-  HTMLgoogleMap: '<div id="map"></div>'
+  HTMLgoogleMap: '<div id="map" class="map"></div>'
 };
 
 /*
@@ -61,13 +56,13 @@ Resume.markup = {
   helper code to run. Don't delete! It hooks up your code to the button you'll
   be appending
 */
-$(document).ready(() => {
-  $('button').click(() => {
-    var $name = $('#name');
-    var iName = inName($name.text()) || function () {};
-    $name.html(iName);
-  });
-});
+// $(document).ready(function () {
+//   $('button').click(function () {
+//     var $name = $('#name');
+//     var iName = inName($name.text()) || function () {};
+//     $name.html(iName);
+//   });
+// });
 
 /*
   The next few lines about clicks are for the Collecting Click Locations quiz
@@ -81,13 +76,26 @@ function logClicks(x, y) {
     x: x,
     y: y
   });
-  console.log(`x location: ${x}; y location: ${y}`);
+  // console.log(`x location: ${x}; y location: ${y}`);
 }
 
-$(document).click((loc) => {
+$(document).click(function (loc) {
   // your code goes here!
 });
 
+/*
+  Custom: attach behaviour to toggle the social media contact links menu
+  when clicking on the hamburger icon
+*/
+function initializeContactsMenu() {
+  var $menuBtn = $('#menuBtn'),
+      $menu = $('#menu');
+
+  $menuBtn.on('click', function (e) {
+    $menuBtn.toggleClass('on fa-bars fa-times');
+    $menu.toggleClass('on');
+  });
+}
 
 /*
   This is the fun part. Here's where we generate the custom Google Map for the
@@ -123,7 +131,7 @@ function initializeMap() {
     content: null,
     maxWidth: 200
   });
-  console.log(infoWindow);
+  // console.log(infoWindow);
 
   /**
   * @description Returns an array of every location string from the JSONs
@@ -157,9 +165,9 @@ function initializeMap() {
     */
     // Resume.work.jobs.forEach((job) => locations.push(job.location));
     Resume.work.jobs
-    .filter(job => !/Vancouver, CA/.test(job.location))
-    .forEach(job => {
-      console.log(job.location);
+    // .filter(job => !/Vancouver, CA/.test(job.location))
+    .forEach(function (job) {
+      // console.log(job.location);
       locations.push(job.meta.address);
       markerRefs.push(job.meta);
     });
@@ -175,7 +183,7 @@ function initializeMap() {
     /* Cache location data */
     var loc = placeData.geometry.location;
 
-    console.log(placeData);
+    // console.log(placeData);
 
     /*
       The next lines save location data from the search result object to local
@@ -197,17 +205,17 @@ function initializeMap() {
     });
 
     /* Point of Interest */
-    var poi = markerRefs.filter(poi => poi.address === address)[0];
+    var poi = markerRefs.filter(function (poi) { return poi.address === address; })[0];
 
     if (poi !== undefined) {
       /* Configure InfoWindow content from corresponding employment section */
-      var content = document.querySelector(`#${poi.ref}`).cloneNode(true);
-      content.querySelectorAll('p').forEach(p => content.removeChild(p));
+      var content = document.querySelector('#' + poi.ref).cloneNode(true);
+      content.querySelectorAll('p').forEach(function (p) { content.removeChild(p); });
       content.removeAttribute('id');
 
       /* Reconfigure marker using custom title and graphic */
       marker.setTitle(content.querySelector('a').innerText);
-      marker.setIcon(`images/googlemaps/${poi.ref}-inkscape-sm.png`);
+      marker.setIcon('images/googlemaps/' + poi.ref + '-inkscape-sm.png');
 
       /*
         infoWindows are the little helper windows that open when you click or
@@ -266,7 +274,7 @@ function initializeMap() {
       Iterates through the array of locations, creates a search object for
       each location
     */
-    locations.forEach((place) => {
+    locations.forEach(function (place) {
       /* The search request object */
       var request = {
         query: place
@@ -300,6 +308,7 @@ $('#mapDiv').append(Resume.markup.HTMLgoogleMap);
 
 /* Calls the initializeMap() function when the page loads */
 window.addEventListener('load', initializeMap);
+window.addEventListener('load', initializeContactsMenu);
 
 /* Vanilla JS way to listen for resizing of the window and adjust map bounds */
 window.addEventListener('resize', function (e) {

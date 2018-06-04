@@ -30,8 +30,9 @@ Resume = window.Resume || {};
 * @param {string} template
 * @returns {string} New string
 */
-const _supplant = (oldStr, newStr, template) =>
-  template.replace(oldStr, newStr);
+const _supplant = function (oldStr, newStr, template) {
+  return template.replace(oldStr, newStr);
+};
 
 /**
 * @description Convenience method for replacing the placeholder `%data%`
@@ -40,8 +41,9 @@ with some content for a given template. Makes use of the `supplant` function
 * @param {string} template
 * @returns {string} New string
 */
-const _replaceData = (content, template) =>
-  _supplant('%data%', content, template);
+const _replaceData = function (content, template) {
+  return _supplant('%data%', content, template);
+};
 
 /**
 * @description Convenience method for replacing a uri placeholder `#` with some
@@ -50,39 +52,45 @@ content for a given template. Makes use of the `supplant` function
 * @param {string} template
 * @returns {string} New string
 */
-const _replaceHash = (content, template) =>
-  _supplant('#', content, template);
+const _replaceHash = function (content, template) {
+  return _supplant('#', content, template);
+};
 
 /**
 * @description Check the page protocol in use for a given url
 * @param {string} url
 * @returns {string} 'http' or 'https'
 */
-const _getPageProtocol = (url) => ['http:', 'https:'][+(/^https:\/\//.test(url))];
+const _getPageProtocol = function (url) {
+  return ['http:', 'https:'][+(/^https:\/\//.test(url))];
+};
 
 const protocol = _getPageProtocol(window.location.href);
 
 /* Biography at a glance */
 Resume.bio = {
   name: "John Ryan",
-  role: "Front-End Developer",
+  role: "Web Developer",
   contacts: {
+    location: "SW London, UK",
+    email: "wave@john-ryan.info",
     mobile: "+44712345678",
-    email: "hello@john-ryan.info",
-    github: "johnryan1982",
-    location: "SW London, UK"
+    github: "johnryan1982"
   },
 
-  welcomeMessage: "A software engineer with over 10 years worth of professional"
-    + " experience in developing a variety of front-end solutions for clients"
-    + " ranging from small startups through to established multi-nationals."
-    + " These solutions have included simple websites through to large web"
-    + " applications. Specialties include JavaScript, CSS, HTML, Node.js, Dart,"
-    + " PHP, open-source and web performance.",
+  welcomeMessage: "A web developer with over 10 years of professional"
+    + " experience. Clients"
+    + " include small startups through to established multi-nationals."
+    + " Solutions incorporate simple websites to large web applications."
+    + " Specialties include JavaScript, CSS, HTML, Node.js, Dart, PHP,"
+    + " open-source and web performance.",
 
   skills: [
-    "JavaScript - vanilla JS, ECMAScript 6, Node.js along with popular JS "
-      + "frameworks & libraries"
+    "JavaScript - vanilla JS, ECMAScript 6, Node.js & jQuery, along with"
+      + " many popular JS frameworks, libraries and task-runners",
+    "CSS3 - vanilla CSS and pre-processors including SCSS, SASS and LESS",
+    "HTML5 - semantic markup",
+    "Version control - predominantly Git, with some experience of using SVN"
   ],
 
   biopic: "//gravatar.com/avatar/186b65f0404c63825b28710da670b293?s=220",
@@ -94,50 +102,88 @@ Resume.bio = {
     var bio = this,
       /* Placeholder to prevent unnecessary DOM reflows/repaints */
       docFrag = $(document.createDocumentFragment()),
-      container = $('#header'),
-      topContacts = container.find('#topContacts'),
+      headerContainer = $('#header'),
+      headlineContainer = headerContainer.find('.headline'),
+      blurbContainer = $('#blurb'),
+      topContacts = $('#menu'),
+      skillsContainer = $('#skills'),
       skills,
       markup = Resume.markup;
 
     /*
       First round of content injection into DOM.
-      Name & role both appear *before* the existing contacts placeholder
+      Biopic is an independent content block (no nested/adjacent sibling nodes)
     */
-    docFrag.append(_replaceData(bio.name, markup.HTMLheaderName));
-    docFrag.append(_replaceData(bio.role, markup.HTMLheaderRole));
-    docFrag.insertBefore(topContacts);
+    docFrag.append(_replaceData(bio.biopic, markup.HTMLbioPic));
+    docFrag.insertBefore(headlineContainer);
 
     /*
       Second round of content injection into DOM.
-      Contact channels.
+      Name and Role are adjacent siblings of the $headlineContainer placeholder
       Note that we re-use the (now empty) documentFragment so as to
       prevent a new object invocation
+    */
+    docFrag.append(_replaceData(bio.name, markup.HTMLheaderName));
+    docFrag.append(_replaceData(bio.role, markup.HTMLheaderRole));
+    headlineContainer.append(docFrag);
+
+    /*
+      Third round of content injection into DOM.
+      Contact channels.
     */
     topContacts.append(Resume.printContactInfo());
 
     /*
-      Third round of content injection into DOM.
-      Bio picture and welcome message
+      Fourth round of content injection into DOM.
+      Welcome message
     */
-    docFrag.append(_replaceData(bio.biopic, markup.HTMLbioPic));
-    docFrag.append(_replaceData(bio.welcomeMessage, markup.HTMLwelcomeMsg));
-    container.append(docFrag);
+    blurbContainer.append(_replaceData(bio.welcomeMessage, markup.HTMLwelcomeMsg));
 
     /*
-      Fourth round of content injection into DOM.
+      Fifth round of content injection into DOM.
       Skills
+      Note that we re-use the (now empty) documentFragment so as to
+      prevent a new object invocation
     */
     skills = bio.skills;
     if (skills.length > 0) {
       /* Inject header and containing `<div>` */
-      container.append(markup.HTMLskillsStart);
+      skillsContainer.append(markup.HTMLskillsStart);
 
       /* Generate new content, then add to injected `<div>` */
-      skills.forEach((skill) => {
-        docFrag.append(_replaceData(skill, markup.HTMLskills));
+      skills.forEach(function (skill) {
+        var key_val_pairings = skill.split(' - '),
+          key = key_val_pairings[0],
+          val = key_val_pairings[1];
+        docFrag.append(_supplant('%val%', val, _supplant('%key%', key, markup.HTMLskills)));
       });
-      $('#skills', container).append(docFrag);
+      skillsContainer.find('.skills').append(docFrag);
     }
+  }
+};
+
+/*
+  Additional content that extends the Resume.bio.contacts object.
+  Intentionally defined in a separate content block for DRY purposes.
+*/
+Resume.bio.contactsMeta = {
+  location: {
+    icon: "fa-map-marker",
+    link: "//www.google.co.uk/maps/place/London+Borough+of+Wandsworth,+London/@51.4557593,-0.1996067,12z/data=!4m5!3m4!1s0x48760589ff8fea83:0x37252c9ca56f68d2!8m2!3d51.4570716!4d-0.1817824"
+  },
+  email: {
+    icon: "fa-envelope",
+    link: "mailto:" + Resume.bio.contacts.email,
+    target: false
+  },
+  mobile: {
+    icon: "fa-phone",
+    link: "tel:" + Resume.bio.contacts.mobile,
+    target: false
+  },
+  github: {
+    icon: "fa-github",
+    link: "//github.com/" + Resume.bio.contacts.github
   }
 };
 
@@ -161,13 +207,13 @@ Resume.education = {
 
   onlineCourses: [
     {
-      title: "JavaScript Crash Course",
-      school: "Udacity",
-      dates: "July 2017 - August 2017",
-      url: "//www.udacity.com/course/ud804"
+      title: "Multiple Frontend Web Developer, framework and tooling courses",
+      school: "CodeSchool",
+      dates: "May 2016 - October 2016",
+      url: "//www.codeschool.com/users/johnryan1982"
     },
     {
-      title: "Front-End Web Developer Nanodegree",
+      title: "Frontend Web Developer Nanodegree",
       school: "Udacity",
       dates: "December 2016 - January 2018",
       url: "//www.udacity.com/course/nd001"
@@ -186,7 +232,7 @@ Resume.education = {
       markup = Resume.markup;
 
     /* Schools */
-    education.schools.forEach((school) => {
+    education.schools.forEach(function (school) {
       var schoolContainer = $(markup.HTMLschoolStart),
         title = _replaceData(school.name, markup.HTMLschoolName) + _replaceData(school.degree, markup.HTMLschoolDegree);
 
@@ -210,7 +256,7 @@ Resume.education = {
 
         coursesContainer.append(_replaceHash(course.url, title));
         coursesContainer.append(_replaceData(course.dates, markup.HTMLonlineDates));
-        coursesContainer.append(_replaceHash(course.url, _replaceData(protocol + course.url, markup.HTMLonlineURL)));
+        coursesContainer.append(_replaceHash(course.url, _replaceData(course.url.replace(/\/\//, ''), markup.HTMLonlineURL)));
         docFrag.append(coursesContainer);
       });
 
@@ -228,9 +274,10 @@ Resume.work = {
       title: "Technical Consultant",
       location: "London, UK",
       dates: "February 2016 - in progress",
-      description: "I provide ongoing technical guidance and assistance to a"
-        + " London-based eatery, with a primary focus on frontend solutions"
-        + " and email services.",
+      description: "Wulf & Lamb are an award-winning vegan restaurant in the"
+        + " London borough of Chelsea. I provide ongoing technical guidance"
+        + " and assistance with a primary focus on frontend solutions, IT"
+        + " infrastructure and systens maintenance.",
       meta: {
         ref: "wulf",
         url: "//www.wulfandlamb.com",
@@ -240,26 +287,26 @@ Resume.work = {
     },
     {
       employer: "Ancoa Software",
-      title: "Lead Front-End Developer",
+      title: "Lead Frontend Developer",
       location: "London, UK",
       dates: "September 2014 - April 2016",
       description: "Ancoa provides contextual surveillance and insightful"
-        + " analytics for exchanges, regulators, buy and sell-side companies."
-        + " Their main product, AncoaSuite, is a desktop application written in"
-        + " C++. I was employed as their first frontend developer, tasked with"
-        + " building a frontend team and replicating the suite within the"
-        + " browser.<br><br>After successfully developing a JavaScript"
-        + " prototype (MEAN: Angular and D3, backed by Node.js, Express and"
-        + " MongoDB), the company took the initiative to focus development on"
-        + " the WebApp. Given the weighting of C++ developers, a decision was"
-        + " made to use Google Dart, a C-style language that transpiles into"
-        + " JavaScript. I spent 6 months laying the foundations for the new"
-        + " project; mentoring existing developers; and recruiting additional"
-        + " junior developers to form a frontend team. However, due to a change"
-        + " in personnel on the board and the subsequent change of direction"
-        + " from the senior management team, frontend resources were reduced"
-        + " and progress slowed. Shortly after this point, I chose to pursue"
-        + " other interests including a return to working in native frontend"
+        + " analytics for trading exchanges, regulators, and both buy- and"
+        + " sell-side companies. Ancoa's main product, AncoaSuite, is a desktop"
+        + " application written in C++. I was employed as their first frontend"
+        + " developer, tasked with building a frontend team and replicating the"
+        + " suite within the browser.<br><br>After successfully developing a"
+        + " JavaScript prototype (MEAN: Angular and D3, backed by Node.js,"
+        + " Express and MongoDB), the company took the initiative to focus"
+        + " development on the WebApp. Given the weighting of C++ developers, a"
+        + " decision was made to use Google Dart, a C-style language that"
+        + " transpiles into JavaScript. I spent 6 months laying the foundations"
+        + " for the new project; mentoring existing developers; and recruiting"
+        + " additional junior developers to form a frontend team. However, due"
+        + " to a change in personnel on the board and the subsequent change of"
+        + " direction from the senior management team, frontend resources were"
+        + " reduced and progress slowed. Shortly after this point, I chose to"
+        + " pursue other interests including a return to working in native frontend"
         + " technologies.",
       meta: {
         ref: "ancoa",
@@ -273,8 +320,7 @@ Resume.work = {
       title: "Technical Consultant",
       location: "London, UK",
       dates: "August 2013 - August 2014",
-      description: "On returning from Canada, I resumed my employment with VYRE"
-        + " who had recently been acquired by North Plains Ltd. As a Technical"
+      description: "Having previously worked for VYRE prior to my sabbatical to Canada (see below), I resumed my employment with the company who had been acquired by North Plains Ltd. As a Technical"
         + " Consultant I lead a team of developers, designers and testers to"
         + " produce solutions built on the company's bespoke Content Management"
         + " System. I was responsible for managing development for a number of"
@@ -287,27 +333,26 @@ Resume.work = {
         ref: "northplains",
         url: "//www.northplains.com",
         address: "41 Corsham St, Hoxton, London N1 6DR, UK",
-        tags: ["JavaScript", "HTML", "CSS", "XML", "XSL", "Agile", "Project Management", "jQuery", "SVN"]
+        tags: ["Project Management", "Agile", "JavaScript", "HTML", "CSS", "XML", "XSL", "jQuery"]
       }
     },
     {
       employer: "Sprout At Work",
-      title: "Lead Front-End Developer",
+      title: "Lead Frontend Developer",
       location: "Vancouver, CA",
       dates: "June 2012 - April 2013",
-      description: "Whilst on a sabatical from VYRE, I worked as the lead"
-        + " frontend developer for Sprout At Work, a small startup based in"
-        + " downtown Vancouver who gamified living a healthy lifestyle."
-        + " Organisations would subscribe to a hosted service and be provided"
-        + " with access to a webapp where each employee had the opportunity to"
-        + " log activities and to be rewarded with points. The premise was that"
-        + " leading a healthy lifestyle reduced absenteeism and encouraged a"
-        + " more productive employee. Most organisations chose to incentivise"
-        + " participating employees in ways such as free sports equipment,"
-        + " healthy breakfasts and weekly yoga classes during office hours."
-        + "<br><br>As their first permanent developer I was tasked with"
-        + " expanding the core functionality of their webapp built using the"
-        + " PHP CodeIgniter framework. My first task was to refactor the"
+      description: "Sprout At Work is a small startup based in downtown Vancouver"
+        + " who gamify living a healthy lifestyle. Whilst on a sabatical from VYRE,"
+        + " I was employed as their lead frontend developer. Organisations would"
+        + " subscribe to a hosted service and be provided with access to a webapp"
+        + " where each employee had the opportunity to log activities and to be"
+        + " rewarded with points. The premise was that leading a healthy lifestyle"
+        + " reduced absenteeism and encouraged a more productive employee. Most"
+        + " organisations chose to incentivise participating employees in ways"
+        + " such as free sports equipment, healthy breakfasts and weekly yoga"
+        + " classes during office hours.<br><br>As their first permanent developer"
+        + " I was tasked with expanding the core functionality of their webapp built"
+        + " using the PHP CodeIgniter framework. My first task was to refactor the"
         + " existing codebase and restructure the webapp to take advantage of"
         + " modern browser capabilities through the use of modular components"
         + " and client-side processing. This in turn resulted more responsive"
@@ -328,19 +373,19 @@ Resume.work = {
         + " Hamilton and BC Ferries. The system was able to cope with the"
         + " influx of over forty thousand new user accounts, culminating in"
         + " loads of over eight thousand concurrent users during peak times."
-        + "<br><br>In February 2013, we were proudly selected to participate in"
+        + " <br><br>In February 2013, we were proudly selected to participate in"
         + " the inaugural Nike+ Accelerator programme as one of 10"
         + " hand-selected companies.",
       meta: {
         ref: "sprout",
         url: "//www.sproutatwork.com",
         address: "1 Alexander St, Vancouver, BC V6A 1B2, Canada",
-        tags: ["JavaScript", "HTML", "CSS", "AWS", "Git", "Unix", "Agile", "Project Management", "jQuery"]
+        tags: ["JavaScript", "HTML", "CSS", "PHP", "AWS", "Git", "Unix", "CodeIgniter", "Agile", "Project Management", "jQuery", "Grunt", "LESS", "Vagrant", "Ansible", "SQL"]
       }
     },
     {
       employer: "VYRE",
-      title: "Lead Front-End Developer",
+      title: "Lead Frontend Developer",
       location: "London, UK",
       dates: "September 2008 - April 2012",
       description: "VYRE was a mid-sized software house who built and"
@@ -348,26 +393,25 @@ Resume.work = {
         + " Professional Services team who leveraged Unify to create bespoke"
         + " Content Management Systems (CMS) and Digital Asset Management (DAM)"
         + " solutions for large corporations. These solutions ranged from"
-        + " internal, closed systems such as Diageo’s SmartBrand with custom"
-        + " workflows and complex approval processes, to public facing websites"
-        + " such as Inghams (travel website; 10,000’s page views/day) and"
-        + " ESPNStar (now FOXSports Asia; television network website; 100,000’s"
-        + " page views/day peaking at millions of page views/day during the"
-        + " cricket season) both of which had custom external feeds driving"
-        + " their content.<br><br>All of our client solutions were developed"
-        + " using either native JavaScript or the jQuery library (as determined"
-        + " by the client’s internal DevOps/Developers). Site content would be"
-        + " polled where appropriate using AJAX. The Extensible Stylesheet"
-        + " Language (XSL) was used to transform the XML response as required"
-        + " into either HTML or CSS, and on occasion, to generate further"
-        + " custom JavaScript to be injected into the webpage. I would often"
-        + " need to create custom Java classes to extend the standard XSL"
-        + " transformers.",
+        + " internal, closed systems such as Diageo’s SmartBrand (asset management"
+        + " portal; 30,000 registered users) with custom workflows and complex"
+        + " approval processes, to public facing websites such as Inghams (travel"
+        + " website; 10,000’s page views/day) and ESPNStar (now FOXSports Asia;"
+        + " television network website; 100,000’s page views/day peaking at millions"
+        + " of page views/day during the IPL cricket season) both of which had"
+        + " custom external feeds driving their content.<br><br>Each of our client"
+        + " solutions was developed using either native JavaScript or the jQuery"
+        + " library (as determined by the client’s internal DevOps/Developers)."
+        + " Site content would be polled where appropriate using AJAX. The Extensible"
+        + " Stylesheet Language (XSL) was used to transform the XML response as"
+        + " required into either HTML or CSS, and to generate further custom"
+        + " JavaScript to be injected into the webpage. I would often need to"
+        + " create custom Java classes to extend the standard XSL transformers.",
       meta: {
         ref: "vyre",
         url: "//twitter.com/vyreonbrand/status/276691034182926338",
         address: "5-25 Scrutton St, London EC2A 4HJ, UK",
-        tags: ["JavaScript", "jQuery", "HTML", "CSS", "XML", "XSL", "Java", "SQL", "Unix", "Agile", "SVN"]
+        tags: ["JavaScript", "jQuery", "HTML", "CSS", "XML", "XSL", "Java", "SQL", "Unix", "Agile", "SVN", "Agile"]
       }
     }
   ],
@@ -379,11 +423,11 @@ Resume.work = {
     var work = this,
       /* Placeholder to prevent unnecessary DOM reflows/repaints */
       docFrag = $(document.createDocumentFragment()),
-      container = $('#workExperience'),
+      container = $('#experience'),
       markup = Resume.markup;
 
     /* Jobs */
-    work.jobs.forEach((job) => {
+    work.jobs.forEach(function (job) {
       var jobContainer = $(markup.HTMLworkStart),
         meta = job.meta,
         employer = _replaceHash(meta.url, _replaceData(job.employer, markup.HTMLworkEmployer)),
@@ -391,12 +435,11 @@ Resume.work = {
         tags = [];
 
       jobContainer.attr('id', job.meta.ref);
-      jobContainer.addClass('employment');
       jobContainer.append($(employer + title));
       jobContainer.append($(_replaceData(job.dates, markup.HTMLworkDates)));
       jobContainer.append($(_replaceData(job.location, markup.HTMLworkLocation)));
 
-      meta.tags.forEach((tag) => {
+      meta.tags.forEach(function (tag) {
         tags.push(_replaceData(tag, markup.HTMLworkTag));
       });
       jobContainer.append($(_replaceData(tags.join(''), markup.HTMLworkTags)));
@@ -418,7 +461,7 @@ Resume.projects = {
       title: "WeArePlantNation.com",
       dates: "September 2015 - July 2016",
       description: "Website design, development and maintenance services for a"
-        + " plant-based delicatessen",
+        + " plant-based delicatessen in Chelsea, London",
       images: ["images/weareplantnation@1x.jpg"]
     },
     {
@@ -440,16 +483,22 @@ Resume.projects = {
       markup = Resume.markup;
 
     /* Projects */
-    projects.projects.forEach((project) => {
-      var projectContainer = $(markup.HTMLprojectStart);
+    projects.projects.forEach(function (project) {
+      var projectContainer = $(markup.HTMLprojectStart), galleryContainer;
 
       projectContainer.append($(_replaceData(project.title, markup.HTMLprojectTitle)));
       projectContainer.append($(_replaceData(project.dates, markup.HTMLprojectDates)));
       projectContainer.append($(_replaceData(project.description, markup.HTMLprojectDescription)));
 
-      project.images.forEach((image) => {
-        projectContainer.append($(_replaceData(image, markup.HTMLprojectImage)));
-      });
+      /* Images */
+      if (project.images && project.images.length > 0) {
+        galleryContainer = $(markup.HTMLprojectGallery);
+
+        project.images.forEach(function (image) {
+          galleryContainer.append($(_replaceData(image, markup.HTMLprojectImage)));
+        });
+        projectContainer.append(galleryContainer);
+      }
 
       docFrag.append(projectContainer);
     });
@@ -461,7 +510,7 @@ Resume.projects = {
 
 Resume.footer =  {
   display: function () {
-    $('#footerContacts').append(Resume.printContactInfo());
+    $('.footer .menu').append(Resume.printContactInfo());
   }
 };
 
@@ -470,10 +519,18 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
   var docFrag = $(document.createDocumentFragment()),
     markup = Resume.markup;
 
-  Object.keys(channels).forEach((channel) => {
+  Object.keys(channels).forEach(function (channel) {
+    var template, meta, replaced_data, replaced_icon, replaced_action, replaced_target;
     if (typeof channels[channel] === 'object') return;
-    var template = markup['HTML' + channel] || markup.HTMLcontactGeneric;
-    docFrag.append(_replaceData(channels[channel], template));
+    template = markup.HTMLcontactGeneric;
+    meta = Resume.bio.contactsMeta[channel];
+    replaced_data = _replaceData(channels[channel], template);
+    replaced_icon = _supplant('%icon%', meta.icon, replaced_data);
+    replaced_action = _supplant('%action%', meta.link, replaced_icon);
+    if (meta.hasOwnProperty('target') && !meta.target) {
+      replaced_target = _supplant(' target="_blank"', '', replaced_action);
+    }
+    docFrag.append(replaced_target ? replaced_target : replaced_action);
   });
 
   /*
@@ -484,11 +541,11 @@ Resume.printContactInfo = (function _generateContactInfo(channels) {
     contact information would simply be _moved_ to the footer and not
     duplicated as is desired)
   */
-  return () => docFrag.clone();
+  return function () { return docFrag.clone(); };
 })(Resume.bio.contacts);
 
 Resume.bio.display();
-Resume.education.display();
 Resume.work.display();
 Resume.projects.display();
+Resume.education.display();
 Resume.footer.display();
