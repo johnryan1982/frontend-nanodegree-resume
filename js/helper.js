@@ -89,7 +89,7 @@
     when clicking on the hamburger icon
   */
   function initializeContactsMenu() {
-    var $menuBtn = $('#menuBtn'),
+    var $menuBtn = $('#menu-btn'),
       $menu = $('#menu');
 
     $menuBtn.on('click', function(e) {
