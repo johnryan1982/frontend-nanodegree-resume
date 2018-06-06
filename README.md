@@ -11,13 +11,13 @@ Assumptions:
 Observations:
 * avoid the use of non-polyfill ES6 features such as `const` and `let` as these will throw errors on older JS engines such as that used on the iPhone 4s running iOs 8.1;
 * prefer `arr.forEach()` as opposed to `for()` loops as more compact, provides closures and therefore lends itself easily to functional programming;
-* prefer `$(obj).append(_window.Resume.markup.HTMLString_)` as opposed to `$(obj).append($(_window.Resume.markup.HTMLString_))` as it performs at least 5% quicker when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
+* prefer `$(obj).append(_window.Resume.markup.HTMLString_)` as opposed to `$(obj).append($(_window.Resume.markup.HTMLString_))` as it performs at least 5% quicker when tested on [JSperf](https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
 * prefer to use `documentFragment`s and only appending to the DOM when required to prevent unnecessary DOM reflows/repaints;
-* use Google's Reverse Geocoding example page to easily generate lat/lng combinations when necessary (https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding)
-
-### CSS
+* use [Google's Reverse Geocoding example page](https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding) to easily generate lat/lng combinations when necessary
 
 ### HTML
+Observations:
+* move non-critical, render-blocking resources (such as the _Google Maps_ script and _Font Awesome_ styles) to the end of the document to minimise [time-to-first-paint](https://developers.google.com/web/tools/lighthouse/audits/first-meaningful-paint)
 
 ## How do I complete this project?
 Review the Online Resume [Project Rubric](https://review.udacity.com/?_ga=1.189245867.12280332.1465333852#!/projects/2962818615/rubric).
