@@ -1,91 +1,98 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta charset="utf-8">
-    <title>Resume</title>
-    <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBJtwGfwd81HdSt9FbgPveJM2WZTs6cdtU"></script>
-  </head>
-  <body>
-    <div class="wrapper">
 
-      <header class="header" id="header">
-        <div class="headline"></div>
-        <div class="responsive-container">
-          <button id="menu-btn" class="menu-btn fa fa-bars" title="Contact details menu"></button>
-        </div>
-      </header>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <title>Resume</title>
+  <link href="css/style.css" rel="stylesheet">
+  <script src="js/jQuery.js"></script>
+</head>
 
-      <nav id="menu" class="menu"></nav>
+<body>
+  <div class="wrapper">
 
-      <main class="main" id="main">
-        <section class="content" id="blurb"></section>
+    <header class="header" id="header">
+      <div class="headline"></div>
+      <div class="responsive-container">
+        <button id="menu-btn" class="menu-btn fa fa-bars" title="Contact details menu"></button>
+      </div>
+    </header>
 
-        <section class="content" id="skills">
-          <header class="sub-header">Skills at a glance</header>
-        </section>
+    <nav id="menu" class="menu"></nav>
 
-        <section class="content" id="experience">
-          <header class="sub-header">Work experience</header>
-        </section>
+    <main class="main" id="main">
+      <section class="content" id="blurb"></section>
 
-        <section class="content" id="projects">
-          <header class="sub-header">Projects</header>
-        </section>
+      <section class="content" id="skills">
+        <header class="sub-header">Skills at a glance</header>
+      </section>
 
-        <section class="content" id="education">
-          <header class="sub-header">Education</header>
-        </section>
+      <section class="content" id="experience">
+        <header class="sub-header">Work experience</header>
+      </section>
 
-        <section class="content" id="locations">
-          <header class="sub-header">Where I've lived & worked</header>
-          <div id="mapDiv"></div>
-        </section>
-      </main>
+      <section class="content" id="projects">
+        <header class="sub-header">Projects</header>
+      </section>
 
-      <footer class="footer">
-        <h3 class="sub-header">Let's connect</h3>
-        <nav class="menu"></nav>
-      </footer>
+      <section class="content" id="education">
+        <header class="sub-header">Education</header>
+      </section>
 
-    </div>
+      <section class="content" id="locations">
+        <header class="sub-header">Where I've lived & worked</header>
+        <div id="mapDiv"></div>
+      </section>
+    </main>
 
-    <script src="js/polyfill.js"></script>
-    <script src="js/jQuery.js"></script>
-    <script src="js/helper.js"></script>
-    <script src="js/resumeBuilder.js"></script>
-    <script>
-      /// blurb
-      if (document.getElementById('blurb').getElementsByClassName('quote').length === 0) {
-        document.getElementById('blurb').style.display = 'none';
-      }
+    <footer class="footer">
+      <h3 class="sub-header">Let's connect</h3>
+      <nav class="menu"></nav>
+    </footer>
 
-      /// skills
-      if (document.getElementById('skills').getElementsByClassName('skill').length === 0) {
-        document.getElementById('skills').style.display = 'none';
-      }
+  </div>
 
-      /// experience
-      if (document.getElementById('experience').getElementsByTagName('article').length === 0) {
-        document.getElementById('experience').style.display = 'none';
-      }
+  <!-- defer non-critical, render-blocking resources -->
+  <!-- polyfills.js allows for backwards compatability for older browsers/JS engines, and must load before helper.js and resumeBuilder.js -->
+  <script src="js/polyfill.js"></script>
+  <script src="js/helper.js"></script>
+  <script src="js/resumeBuilder.js"></script>
+  <!-- Font Awesome is used simply for aesthetics, so very low priority -->
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Google Maps script relates to content below-the-fold, so a lower priority -->
+  <script src="//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBJtwGfwd81HdSt9FbgPveJM2WZTs6cdtU"></script>
+  <script>
+    /// blurb
+     if (document.getElementById('blurb').getElementsByClassName('quote').length === 0) {
+      document.getElementById('blurb').style.display = 'none';
+     }
 
-      /// projects
-      if (document.getElementById('projects').getElementsByTagName('article').length === 0) {
-        document.getElementById('projects').style.display = 'none';
-      }
+     /// skills
+     if (document.getElementById('skills').getElementsByClassName('skill').length === 0) {
+      document.getElementById('skills').style.display = 'none';
+     }
 
-      /// education
-      if (document.getElementById('education').getElementsByTagName('article').length === 0) {
-        document.getElementById('education').style.display = 'none';
-      }
+     /// experience
+     if (document.getElementById('experience').getElementsByTagName('article').length === 0) {
+      document.getElementById('experience').style.display = 'none';
+     }
 
-      /// map
-      if (document.getElementById('map') === null) {
-        document.getElementById('locations').style.display = 'none';
-      }
-    </script>
-  </body>
+     /// projects
+     if (document.getElementById('projects').getElementsByTagName('article').length === 0) {
+      document.getElementById('projects').style.display = 'none';
+     }
+
+     /// education
+     if (document.getElementById('education').getElementsByTagName('article').length === 0) {
+      document.getElementById('education').style.display = 'none';
+     }
+
+     /// map
+     if (document.getElementById('map') === null) {
+      document.getElementById('locations').style.display = 'none';
+     }
+  </script>
+</body>
+
 </html>
