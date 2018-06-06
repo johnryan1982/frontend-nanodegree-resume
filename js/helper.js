@@ -1,5 +1,6 @@
-(function () {
-  /* Minimise globals footprint by creating a global Resume object */
+/*global google,mapBounds*/
+(function() {
+  /* Minimise global footprint by creating a global Resume object */
   window.Resume = window.Resume || {};
 
   /*
@@ -69,20 +70,19 @@
     The next few lines about clicks are for the Collecting Click Locations quiz
     in the lesson Flow Control from JavaScript Basics
   */
-  var clickLocations = [];
+  // var clickLocations = [];
 
+  // function logClicks(x, y) {
+  //   clickLocations.push({
+  //     x: x,
+  //     y: y
+  //   });
+  //   // console.log(`x location: ${x}; y location: ${y}`);
+  // }
 
-  function logClicks(x, y) {
-    clickLocations.push({
-      x: x,
-      y: y
-    });
-    // console.log(`x location: ${x}; y location: ${y}`);
-  }
-
-  $(document).click(function (loc) {
-    // your code goes here!
-  });
+  // $(document).click(function(loc) {
+  //   // your code goes here!
+  // });
 
   /*
     Custom: attach behaviour to toggle the social media contact links menu
@@ -90,9 +90,9 @@
   */
   function initializeContactsMenu() {
     var $menuBtn = $('#menuBtn'),
-        $menu = $('#menu');
+      $menu = $('#menu');
 
-    $menuBtn.on('click', function (e) {
+    $menuBtn.on('click', function(e) {
       $menuBtn.toggleClass('on fa-bars fa-times');
       $menu.toggleClass('on');
     });
@@ -103,7 +103,7 @@
     website. See the documentation below for more details.
     https://developers.google.com/maps/documentation/javascript/reference
   */
-  var map,      // declares a global map variable
+  var map, // declares a global map variable
     infoWindow; // declares a global inforWindow variable
 
   /*
@@ -143,8 +143,15 @@
       var locations = [];
 
       /* Adds the single location property from bio to the locations array */
-      // intentionally commented out as don't wish to disclose on a publicly accessible map
-      // locations.push(Resume.bio.contacts.location);
+      // intentionally commented out as don't wish to disclose on a publicly
+      // accessible map; instead, I've created a `Resume.bio.contactsMeta`
+      // property that augments the `Resume.bio.contacts` object and includes
+      // a hard-coded link to a Google Map location that will be displayed
+      // within the contacts menu. I find this to be an acceptable compromise
+      // as the data held within the `Resume.bio.contacts` object is itself
+      // static, therefore it is acceptable to assume that if updating
+      // `Resume.bio.contacts`, one would also update `Resume.bio.contactsMeta`
+      // locations.push(window.Resume.bio.contacts.location);
 
       /*
         Iterates through school locations and appends each location to
@@ -152,8 +159,9 @@
         as described in the Udacity FEND Style Guide:
         https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
       */
-      // intentionally commented out as don't see the relevance of plotting on a work experience map
-      // Resume.education.schools.forEach(school => {
+      // intentionally commented out as don't see the relevance of plotting a
+      // school location on a `work experience` map
+      // window.Resume.education.schools.forEach(school => {
       //   locations.push(school.location);
       //   markerRefs.push(school.meta);
       // });
@@ -164,11 +172,7 @@
         described in the Udacity FEND Style Guide:
         https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
       */
-      // Resume.work.jobs.forEach((job) => locations.push(job.location));
-      window.Resume.work.jobs
-      // .filter(job => !/Vancouver, CA/.test(job.location))
-      .forEach(function (job) {
-        // console.log(job.location);
+      window.Resume.work.jobs.forEach(function(job) {
         locations.push(job.meta.address);
         markerRefs.push(job.meta);
       });
@@ -177,9 +181,9 @@
     }
 
     /**
-    * @description Reads Google Places search results to create map pins
-    * @param {object} placeData contains information about a single location
-    */
+     * @description Reads Google Places search results to create map pins
+     * @param {object} placeData contains information about a single location
+     */
     function createMapMarker(placeData) {
       /* Cache location data */
       var loc = placeData.geometry.location;
@@ -206,12 +210,16 @@
       });
 
       /* Point of Interest */
-      var poi = markerRefs.filter(function (poi) { return poi.address === address; })[0];
+      var poi = markerRefs.filter(function(poi) {
+        return poi.address === address;
+      })[0];
 
       if (poi !== undefined) {
         /* Configure InfoWindow content from corresponding employment section */
         var content = document.querySelector('#' + poi.ref).cloneNode(true);
-        content.querySelectorAll('p').forEach(function (p) { content.removeChild(p); });
+        content.querySelectorAll('p').forEach(function(p) {
+          content.removeChild(p);
+        });
         content.removeAttribute('id');
 
         /* Reconfigure marker using custom title and graphic */
@@ -225,7 +233,7 @@
         */
 
         /* Hmmmm, I wonder what this is about... */
-        google.maps.event.addListener(marker, 'click', function (args) {
+        google.maps.event.addListener(marker, 'click', function(args) {
           // your code goes here!
           // console.log('map clicked', args, infoWindow);
 
@@ -275,7 +283,7 @@
         Iterates through the array of locations, creates a search object for
         each location
       */
-      locations.forEach(function (place) {
+      locations.forEach(function(place) {
         /* The search request object */
         var request = {
           query: place
@@ -302,17 +310,15 @@
     pinPoster(locations);
   }
 
-
   /* Append the relevant markup to the #mapDiv container element */
   $('#mapDiv').append(window.Resume.markup.HTMLgoogleMap);
-
 
   /* Calls the initializeMap() function when the page loads */
   window.addEventListener('load', initializeMap);
   window.addEventListener('load', initializeContactsMenu);
 
   /* Vanilla JS way to listen for resizing of the window and adjust map bounds */
-  window.addEventListener('resize', function (e) {
+  window.addEventListener('resize', function(e) {
     /* Make sure the map bounds get updated on page resize */
     map.fitBounds(mapBounds);
   });

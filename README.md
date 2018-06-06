@@ -1,4 +1,24 @@
 # Project Details
+
+## Notable observations/considerations
+
+### JS
+Assumptions: 
+* using _jQuery_ v2.0.3;
+* support required for older browsers (I still regularly test against iOs 8.1 on an iPhone 4s), hence additional polyfills (eg. **Array.prototype.forEach** and **NodeList.prototype.forEach**) will be included within a separate _polyfill.js_ script;
+* vendor libraries/modules (ie. _jQuery_ and above mentioned _polyfill.js_) **will not** be parsed using _JsHint_ and/or _jsBeautifier_.
+
+Observations:
+* avoid the use of non-polyfill ES6 features such as `const` and `let` as these will throw errors on older JS engines such as that used on the iPhone 4s running iOs 8.1;
+* prefer `arr.forEach()` as opposed to `for()` loops as more compact, provides closures and therefore lends itself easily to functional programming;
+* prefer `$(obj).append(_window.Resume.markup.HTMLString_)` as opposed to `$(obj).append($(_window.Resume.markup.HTMLString_))` as it performs at least 5% quicker when tested on JSperf (https://jsperf.com/jquery-append-htmlstring-vs-jquery-element);
+* prefer to use `documentFragment`s and only appending to the DOM when required to prevent unnecessary DOM reflows/repaints;
+* use Google's Reverse Geocoding example page to easily generate lat/lng combinations when necessary (https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding)
+
+### CSS
+
+### HTML
+
 ## How do I complete this project?
 Review the Online Resume [Project Rubric](https://review.udacity.com/?_ga=1.189245867.12280332.1465333852#!/projects/2962818615/rubric).
 
@@ -24,8 +44,7 @@ And your repository will include the following files:
 * **js/resumeBuilder.js**: This file is empty. You should write your code here.
 * **js/jQuery.js**: The jQuery library.
 * **css/style.css**: Contains all of the CSS needed to style the page.
-* **README.md**: 
-The GitHub readme file.
+* **README.md**: The GitHub readme file.
 * and some images in the images directory.
 
 ## Your starting point...
