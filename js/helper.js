@@ -9,7 +9,7 @@
   */
   window.Resume.markup = {
     // header, menu, blurb & skills
-    HTMLbioPic: '<div class="responsive-img-container biopic"><img src="%data%" class="responsive-img"></div>',
+    HTMLbioPic: '<div class="responsive-img-container biopic"><img src="%file%.%ext%" srcset="%file%.%ext% 1x, %file%@2x.%ext% 2x, %file%@3x.%ext% 3x" class="responsive-img"></div>',
     HTMLheaderName: '<h1 class="h1">%data%</h1>',
     HTMLheaderRole: '<h2 class="h2">%data%</h2>',
     HTMLcontactGeneric: '<li class="contact"><a href="%action%" target="_blank"><span class="fa-stack fa"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse %icon%"></i></span>%data%</a></li>',
@@ -33,7 +33,7 @@
     HTMLprojectDates: '<h2 class="meta date">%data%</h2>',
     HTMLprojectDescription: '<p>%data%</p>',
     HTMLprojectGallery: '<div class="gallery"></div>',
-    HTMLprojectImage: '<div class="responsive-img-container"><img src="%data%" class="responsive-img"></div>',
+    HTMLprojectImage: '<div class="responsive-img-container"><img src="%file%.%ext%" srcset="%file%.%ext% 1x, %file%@2x.%ext% 2x, %file%@3x.%ext% 3x" class="responsive-img"></div>',
 
     // education
     HTMLschoolStart: '<article></article>',

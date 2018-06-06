@@ -24,18 +24,18 @@
   window.Resume = window.Resume || {};
 
   /**
-   * @description Replace oldStr with newStr for a given template
+   * @description Replace all occurrences of oldStr with newStr for a given template
    * @param {string} oldStr
    * @param {string} newStr
    * @param {string} template
    * @returns {string} New string
    */
   var _supplant = function(oldStr, newStr, template) {
-    return template.replace(oldStr, newStr);
+    return template.replace(new RegExp(oldStr, 'g'), newStr);
   };
 
   /**
-  * @description Convenience method for replacing the placeholder `%data%`
+  * @description Convenience method for replacing all occurences of the placeholder `%data%`
   with some content for a given template. Makes use of the `supplant` function
   * @param {string} content
   * @param {string} template
@@ -46,14 +46,25 @@
   };
 
   /**
-  * @description Convenience method for replacing a uri placeholder `#` with some
-  content for a given template. Makes use of the `supplant` function
+  * @description Convenience method for replacing all occurences of a uri placeholder `#` with
+  some content for a given template. Makes use of the `supplant` function
   * @param {string} content
   * @param {string} template
   * @returns {string} New string
   */
   var _replaceHash = function(content, template) {
     return _supplant('#', content, template);
+  };
+
+  /**
+  * @description Convenience method for extracting the filename (including path) and the file
+  suffix from a given canonical resource (eg. ./path/to/img.jpg would return ['./path/to/img', 'jpg'])
+  * @param {string} fully qualified filename
+  * @returns {array} New 2-element array containing filename including path ([0]) and file
+  suffix/extension ([1])
+  */
+  var _deconstructImageFilename = function(canonicalFilename) {
+    return /^(.+)\.([^.]+)$/.exec(canonicalFilename).splice(1);
   };
 
   /* Biography at a glance */
@@ -81,7 +92,7 @@
       "Version control - predominantly Git, with some experience of using SVN"
     ],
 
-    biopic: "images/biopic@1x.jpg",
+    biopic: "images/biopic.jpg",
 
     /**
      * @description Generate HTML content and inject into DOM
@@ -102,7 +113,8 @@
         First round of content injection into DOM.
         Biopic is an independent content block (no nested/adjacent sibling nodes)
       */
-      docFrag.append(_replaceData(bio.biopic, markup.HTMLbioPic));
+      var imgParts = _deconstructImageFilename(bio.biopic);
+      docFrag.append(_supplant('%ext%', imgParts[1], _supplant('%file%', imgParts[0], markup.HTMLbioPic)));
       docFrag.insertBefore(headlineContainer);
 
       /*
@@ -447,13 +459,13 @@
         dates: "September 2015 - July 2016",
         description: "Website design, development and maintenance services for" +
           " a plant-based delicatessen in Chelsea, London",
-        images: ["images/weareplantnation@1x.jpg"]
+        images: ["images/weareplantnation.jpg"]
       },
       {
         title: "RPS London Limited",
         dates: "April 2016 - in progress",
         description: "Technical assistance for a property management firm",
-        images: ["images/rps@1x.jpg"]
+        images: ["images/rps.jpg"]
       }
     ],
 
@@ -481,7 +493,8 @@
           galleryContainer = $(markup.HTMLprojectGallery);
 
           project.images.forEach(function(image) {
-            galleryContainer.append($(_replaceData(image, markup.HTMLprojectImage)));
+            var imgParts = _deconstructImageFilename(image);
+            galleryContainer.append(_supplant('%ext%', imgParts[1], _supplant('%file%', imgParts[0], markup.HTMLprojectImage)));
           });
           projectContainer.append(galleryContainer);
         }
