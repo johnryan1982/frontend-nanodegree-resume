@@ -459,13 +459,13 @@
         dates: "September 2015 - July 2016",
         description: "Website design, development and maintenance services for" +
           " a plant-based delicatessen in Chelsea, London",
-        images: ["images/weareplantnation.jpg"]
+        images: ["images/weareplantnation.jpg", "images/weareplantnation-negate.jpg", "images/weareplantnation-spread.jpg", "images/weareplantnation-spread-blue.jpg"]
       },
       {
         title: "RPS London Limited",
         dates: "April 2016 - in progress",
         description: "Technical assistance for a property management firm",
-        images: ["images/rps.jpg"]
+        images: ["images/rps.jpg", "images/rps-negate.jpg"]
       }
     ],
 
@@ -482,11 +482,13 @@
       /* Projects */
       projects.projects.forEach(function(project) {
         var projectContainer = $(markup.HTMLprojectStart),
+          contentContainer = $(markup.HTMLprojectMain),
           galleryContainer;
 
-        projectContainer.append($(_replaceData(project.title, markup.HTMLprojectTitle)));
-        projectContainer.append($(_replaceData(project.dates, markup.HTMLprojectDates)));
-        projectContainer.append($(_replaceData(project.description, markup.HTMLprojectDescription)));
+        contentContainer.append($(_replaceData(project.title, markup.HTMLprojectTitle)));
+        contentContainer.append($(_replaceData(project.dates, markup.HTMLprojectDates)));
+        contentContainer.append($(_replaceData(project.description, markup.HTMLprojectDescription)));
+        projectContainer.append(contentContainer);
 
         /* Images */
         if (project.images && project.images.length > 0) {

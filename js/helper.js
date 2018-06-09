@@ -29,6 +29,7 @@
 
     // projects
     HTMLprojectStart: '<article></article>',
+    HTMLprojectMain: '<main></main>',
     HTMLprojectTitle: '<h1>%data%</h1>',
     HTMLprojectDates: '<h2 class="meta date">%data%</h2>',
     HTMLprojectDescription: '<p>%data%</p>',
