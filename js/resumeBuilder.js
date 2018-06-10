@@ -74,7 +74,7 @@
     contacts: {
       location: "SW London, UK",
       email: "wave@john-ryan.info",
-      mobile: "+44712345678",
+      mobile: "+447123456789",
       github: "johnryan1982"
     },
 
